@@ -1,3 +1,17 @@
-baseURL = 'http://example.org/'
-languageCode = 'en-us'
-title = 'My New Hugo Site'
+baseURL = 'http://crowd4u.github.io/'
+languageCode = 'ja'
+title = 'crowd4u tech blog'
+theme = "stack"
+hasCJKLanguage = true
+DefaultContentLanguage = "ja"
+
+[permalinks]
+post = "/posts/:slug/"
+page = "/:slug/"
+
+[params]
+mainSections = ["posts"]
+
+[taxonomies]
+tags = "tags"
+author = "author"

@@ -1,0 +1,3 @@
+[submodule "themes/stack"]
+	path = themes/stack
+	url = git@github.com:crowd4u/hugo-theme-stack.git
