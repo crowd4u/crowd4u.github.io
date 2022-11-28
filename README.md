@@ -33,7 +33,7 @@ git submodule update
 
 1. 著者情報ファイルの作成(初回のみ)
 
-初めて記事を書く場合は `data/authors/eniehack.toml` といったように、``{{author_name}}.toml`を作成してください。
+初めて記事を書く場合は `data/authors/eniehack.toml` といったように、`{{author_name}}.toml`を作成してください。
 内容は以下の通りです:
 
 ``` toml
