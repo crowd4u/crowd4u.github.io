@@ -1,4 +1,71 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>crowd4u tech blog</title><link>http://crowd4u.github.io/</link><description>Recent content on crowd4u tech blog</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 01 Dec 2022 14:54:39 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>RDS上のDBのデータをローカルで同期できる環境を作った話</title><link>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</link><pubDate>Thu, 01 Dec 2022 14:54:39 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</guid><description>&lt;p>初めまして、融合知能デザイン研究室に仮配属中のギルドです。(留年しなければ「仮」がとれるはず。。。)&lt;br>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>crowd4u tech blog</title><link>http://crowd4u.github.io/</link><description>Recent content on crowd4u tech blog</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 08 Dec 2022 10:26:23 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>NextCrowd4u概説</title><link>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</link><pubDate>Thu, 08 Dec 2022 10:26:23 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</guid><description>&lt;p>融合知能デザイン研究室のあけいです．
+我々が現在開発しているWebサービスであるNextCrowd4uについて，その概略を説明します．&lt;/p>
+&lt;h2 id="crowd4u概説">Crowd4u概説&lt;/h2>
+&lt;p>まず，&amp;ldquo;Next&amp;quot;以前の「Crowd4u」について簡単に説明します．
+一言で言ってしまえば，Crowd4uはクラウドソーシングプラットフォームです．&lt;br>
+&lt;a class="link" href="https://crowd4u.org/" target="_blank" rel="noopener"
+>Corwd4u&lt;/a>&lt;/p>
+&lt;h3 id="クラウドソーシングとは">クラウドソーシングとは&lt;/h3>
+&lt;p>「クラウドソーシング」をご存知でない方も結構いると思われるので，まずクラウドソーシングについて簡単に説明します．
+クラウドソーシングの「クラウド」は&amp;quot;Crowd&amp;quot;すなわち&amp;quot;群衆&amp;quot;を意味します．（&amp;ldquo;Cloud&amp;quot;すなわち&amp;quot;雲&amp;rdquo;，ではないです！）
+それと，外注すなわち&amp;quot;アウトソーシング&amp;quot;を組み合わせた言葉，それがクラウドソーシングです．
+つまりクラウドソーシングは，不特定多数の労働者に対するアウトソーシングです．
+クラウドソーシングを利用した具体的なサービスを以下に示します．&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.mturk.com/" target="_blank" rel="noopener"
+>Amazon Mechanical Turk&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://crowdworks.jp/" target="_blank" rel="noopener"
+>CrowdWorks&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.lancers.jp/" target="_blank" rel="noopener"
+>Lancers&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.ubereats.com/" target="_blank" rel="noopener"
+>Uber Eats&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>etc&amp;hellip;&lt;/p>
+&lt;p>Crowd4uもここに挙げたようなクラウドソーシングプラットフォームの１つです．&lt;br>
+クラウドソーシングは不特定多数の労働者に仕事を依頼できるため，&lt;/p>
+&lt;ul>
+&lt;li>大量のタスクの早期完了&lt;/li>
+&lt;li>不特定多数の人間の知見の収集（＝集合知の形成）&lt;/li>
+&lt;/ul>
+&lt;p>などが可能になります．&lt;/p>
+&lt;h3 id="大学の研究室による運営">大学の研究室による運営&lt;/h3>
+&lt;p>Crowd4uは融合知能デザイン研究室が運営するクラウドソーシングプラットフォームで，主にクラウドソーシングの学術研究のために利用されています．
+他の大学の研究にも利用されており，それらの研究の要求に応じて機能を実装するなど，学術研究との結びつきの強いプラットフォームです．&lt;/p>
+&lt;p>ちなみに，Crowd4uに決済機能は無いため，あくまでもボランティアでタスクを請け負ってもらうという仕組みになっています．&lt;/p>
+&lt;h2 id="n4u概説1---humanai">N4U概説1 - Human+AI&lt;/h2>
+&lt;p>「NextCrowd4u」次期Crowd4uシステムについて説明します．&amp;ldquo;Next&amp;quot;Crowd4uには今までのCrowd4u，ひいては既存のクラウドソーシングプラットフォームと大きく異なる点があります．それはすなわち&amp;quot;AI&amp;quot;です．
+近年急速に発展する機械学習，それらAIの能力は一部領域では人間を凌駕するまでに発展しました．今後AIがより多くの場面で利用されると予想されます．&lt;/p>
+&lt;p>NextCrowd4uではAIと我々がより密接に関わるであろう将来に向けて，AIと人間のよりよい関わり方を研究するために，AIに対するクラウドソーシングを行う機能を実装します．&lt;/p>
+&lt;h3 id="aiに対するクラウドソーシング">AIに対するクラウドソーシング&lt;/h3>
+&lt;p>クラウドソーシングというのは&amp;quot;人間&amp;quot;にタスクをこなしてもらうというのが一般的ですが，現在では人間にその対象は人間に留まりません．&lt;br>
+AIの性能を競うコンペティションサイトとして&lt;a class="link" href="https://www.kaggle.com/" target="_blank" rel="noopener"
+>Kaggle&lt;/a>等があります．これらのコンペサイトでは，コンペのお題に対して不特定多数のAI開発者が各々のAIの性能を競い，コンペの主催者はAIやAIによって得られたお題の結果を得ます．
+これは不特定多数のAI（とその開発者）に対するクラウドソーシングといえます．
+従来のクラウドソーシングのタスク依頼対象である人間ワーカに対して，AIによるクラウドソーシングにおいて「AI（とその開発者）」を一体とみなしてAIワーカと考えます．&lt;/p>
+&lt;h3 id="人間とaiのクラウドソーシングの違い">人間とAIのクラウドソーシングの違い&lt;/h3>
+&lt;p>AIに対するクラウドソーシングは人間に対するそれとは異なる点があります．
+人間ワーカに対するクラウドソーシングでは，（悪意のあるものを除けば）基本的に高品質なタスク結果を期待できます．しかし，人間ワーカはタスクの実行に時間がかかります．
+一方，AIワーカは大量のタスクを素早く実行できます．しかし，特に教師データを必要とするAIにおいては，教師データが無い，もしくは少ない状態では十分な品質のタスク結果を得ることができません．
+そもそも，機械学習モデルの学習に用いられる教師データは主に人間のワーカによるラベル付けで作成されています．そのため，AIの学習を行う前にはたいてい人間ワーカによる仕事があります．&lt;/p>
+&lt;h3 id="humanai-crowd">Human+AI Crowd&lt;/h3>
+&lt;p>NextCrowd4uでは前述の背景を踏まえ，AIに対してもクラウドソーシングが可能なプラットフォームとします．つまり，NextCrowd4uは&amp;quot;不特定多数の人間&amp;quot;と&amp;quot;不特定多数のAI&amp;rdquo;：Human+AI Crowdに対するクラウドソーシングを行うプラットフォームです．人間へのタスク依頼とAIワーカへのタスク依頼を柔軟に組み合わせることで，より迅速により高品質なタスク結果が期待できます．&lt;/p>
+&lt;h2 id="n4u概論-2---メタプラットフォーム">N4U概論 2 - メタプラットフォーム&lt;/h2>
+&lt;p>上でいくつかのクラウドソーシングプラットフォームを挙げましたが，それらのプラットフォームにはそれぞれ特徴があり，状況やタスクの目的に応じてそれらを使い分けることが出来れば，より効率的により良い結果を得ることが期待できます．
+そこで，NextCrowd4uはクラウドソーシングタスクを直接扱うのではなく，複数の既存プラットフォームを扱う「メタプラットフォーム」を目指しています．
+例えば&lt;/p>
+&lt;ol>
+&lt;li>APIなどを用いて既存のクラウドソーシングサービス上でタスクを発行．&lt;/li>
+&lt;li>タスクの結果を得たら，それをNextCrowd4u上で統合，分析する&lt;/li>
+&lt;li>結果に応じて動的に各プラットフォームでタスクを発行する&lt;/li>
+&lt;/ol>
+&lt;p>&amp;hellip;という流れを繰り返すことを想定しています．&lt;br>
+このように１つの目的に対して状況に応じて柔軟に複数のサービスを用いることが可能なプラットフォームを目指しています．&lt;/p>
+&lt;h2 id="まとめ">まとめ&lt;/h2>
+&lt;p>NextCrowd4uは&lt;br>
+&lt;strong>Human+AI Crowdに対するクラウドソーシングを実現するメタプラットフォーム&lt;/strong>&lt;br>
+です．&lt;/p>
+&lt;p>今後我々N4U開発チームは最新の研究の成果などを取り入れながらNextCrowd4uの開発を行い，AIと人間がより高度に融合した社会の基盤づくりを進めていきます．&lt;/p></description></item><item><title>RDS上のDBのデータをローカルで同期できる環境を作った話</title><link>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</link><pubDate>Thu, 01 Dec 2022 14:54:39 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</guid><description>&lt;p>初めまして、融合知能デザイン研究室に仮配属中のギルドです。(留年しなければ「仮」がとれるはず。。。)&lt;br>
 融合知能デザイン研究室で開発しているNextCrowd4uの開発チームに最近加わったため、加入後に初めて行ったことについて書いていきたいと思います。&lt;/p>
 &lt;h2 id="nextcrowd4un4uについて">NextCrowd4u(N4U)について&lt;/h2>
 &lt;p>まだブログも創設から間もないという事で、NextCrowd4Uについてザックリ説明していこうと思います。
