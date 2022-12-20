@@ -1,4 +1,47 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>crowd4u tech blog</title><link>http://crowd4u.github.io/</link><description>Recent content on crowd4u tech blog</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 08 Dec 2022 10:26:23 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>NextCrowd4u概説</title><link>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</link><pubDate>Thu, 08 Dec 2022 10:26:23 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</guid><description>&lt;p>融合知能デザイン研究室のあけいです．
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>crowd4u tech blog</title><link>http://crowd4u.github.io/</link><description>Recent content on crowd4u tech blog</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Tue, 20 Dec 2022 22:00:00 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>簡単に始める自動デプロイ生活</title><link>http://crowd4u.github.io/posts/2022-12-20-rsync_deploy/</link><pubDate>Tue, 20 Dec 2022 22:00:00 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-20-rsync_deploy/</guid><description>&lt;p>こんにちは、notch_manです。とある講義のメンターをやっていて色々思うところがあったので、今日は簡単に自動デプロイを実現する方法を紹介したいと思います。&lt;/p>
+&lt;h2 id="デプロイって難しそう">デプロイって難しそう&lt;/h2>
+&lt;p>デプロイって皆さんに聞くと大体こんなワードが返ってきます（私の観測範囲）。&lt;/p>
+&lt;blockquote>
+&lt;p>GitHub Actionsでいろいろ書くんでしょ？難しそう&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>CircleCIで自動デプロイはやったことありますが、個人だとお金がかかるし…&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>友人にプロが居るのでいつも丸投げです&lt;/p>
+&lt;/blockquote>
+&lt;p>確かに、複雑なデプロイや環境毎に変数値が変わるなどの事情があればこれらのサービスを使った方がいろいろな事が出来ます。ただ、デプロイってそんな難しいものなのでしょうか？ここでデプロイという単語を辞書で見てみましょう。&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;strong>デプロイ&lt;/strong>とは、配備する、配置する、展開する、配置につく、などの意味を持つ英単語。ITの分野では開発したソフトウェアを実際の運用環境に配置・展開して実用に供することを指す場合が多い。（出典：&lt;a class="link" href="https://e-words.jp/w/%E3%83%87%E3%83%97%E3%83%AD%E3%82%A4.html" target="_blank" rel="noopener"
+>https://e-words.jp/w/デプロイ.html&lt;/a>）&lt;/p>
+&lt;/blockquote>
+&lt;p>これらをまとめると、みなさんが難しいと思う自動デプロイはたった3つの条件を満たせばどんな方法で実現しても良いことが分かります。&lt;/p>
+&lt;ol>
+&lt;li>何かを実行したらソースコード・成果物が所定の位置に配置される&lt;/li>
+&lt;li>所定の位置に配置されたソースコード・成果物が実用的な動作をする&lt;/li>
+&lt;li>それらがなるべく人の手を介さずに処理される&lt;/li>
+&lt;/ol>
+&lt;p>というわけで、これらを満たすとても簡単なデプロイスクリプトを実装してみます。&lt;/p>
+&lt;h2 id="rsyncで始める自動デプロイ">rsyncで始める自動デプロイ&lt;/h2>
+&lt;p>初心者がデプロイ組むときにサーバーのURLとかいろいろ考えるの難しいですよね？でも、そんな状態でも大体”&lt;strong>公開鍵認証&lt;/strong>”でSSHは通じているはずです。となれば、この経路を使ってファイルを置くことが出来そうですね。というわけで、SSH経由で自動デプロイをしてみましょう。これを実現する方法にrsyncというものがあります。rsyncは差分ファイル転送を行なうツールになっています。差分ファイル転送を雑に説明すると、あるファイルに更新があった場合に別のサーバーなどの対応するファイルと変更を同期する機能のことです。rsyncについては&lt;a class="link" href="https://wiki.archlinux.jp/index.php/Rsync" target="_blank" rel="noopener"
+>こちらのサイト&lt;/a> がとても参考になります。&lt;/p>
+&lt;p>では、rsyncを使ってデプロイスクリプト（deploy.sh）を書いてみましょう。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>rsync -r -a &amp;lt;転送したいファイルを含んだフォルダ&amp;gt;/* &amp;lt;remote server&amp;gt;:&amp;lt;配置したいディレクトリ&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>さらに~/ssh/configを編集して鍵情報などを登録しておきます。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>Host &amp;lt;remote server&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> HostName &amp;lt;ip address or server name&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> User example
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> IdentityFile ~/.ssh/example_key
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ServerAliveInterval &lt;span style="color:#ae81ff">60&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上でデプロイスクリプトの完成です。あとは&lt;code>bash [deploy.sh](http://deploy.sh)&lt;/code> を実行すればデプロイが走ります。&lt;/p>
+&lt;h2 id="まとめ">まとめ&lt;/h2>
+&lt;p>自動デプロイとか一見すると難しいワードですが、以下を満たせば手段は何でも良いです。&lt;/p>
+&lt;ol>
+&lt;li>何かを実行したらソースコード・成果物が所定の位置に配置される&lt;/li>
+&lt;li>所定の位置に配置されたソースコード・成果物が実用的な動作をする&lt;/li>
+&lt;li>それらがなるべく人の手を介さずに処理される&lt;/li>
+&lt;/ol>
+&lt;p>特に講義で頻繁にデプロイをする方々はぜひ参考にしてみてください。最後になりますが、技術で解決出来る事はさっさと技術で解決して本質にしっかり向き合っていきましょう！&lt;/p></description></item><item><title>NextCrowd4u概説</title><link>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</link><pubDate>Thu, 08 Dec 2022 10:26:23 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</guid><description>&lt;p>融合知能デザイン研究室のあけいです．
 我々が現在開発しているWebサービスであるNextCrowd4uについて，その概略を説明します．&lt;/p>
 &lt;h2 id="crowd4u概説">Crowd4u概説&lt;/h2>
 &lt;p>まず，&amp;ldquo;Next&amp;quot;以前の「Crowd4u」について簡単に説明します．
