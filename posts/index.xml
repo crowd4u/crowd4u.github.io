@@ -1,4 +1,62 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on crowd4u tech blog</title><link>http://crowd4u.github.io/posts/</link><description>Recent content in Posts on crowd4u tech blog</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Sat, 24 Dec 2022 00:00:00 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>しがない大学生がレガシーコードに向き合った感想</title><link>http://crowd4u.github.io/posts/2022-12-24-advent_calendar/</link><pubDate>Sat, 24 Dec 2022 00:00:00 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-24-advent_calendar/</guid><description>&lt;p>&lt;a class="link" href="https://adventar.org/calendars/8181" target="_blank" rel="noopener"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on crowd4u tech blog</title><link>http://crowd4u.github.io/posts/</link><description>Recent content in Posts on crowd4u tech blog</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 28 Dec 2022 15:20:37 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Hugoでポートフォリオサイトを作成する際の備忘録</title><link>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</link><pubDate>Wed, 28 Dec 2022 15:20:37 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>　この記事は筆者が１年放置したポートフォリオサイトの更新に際して，でHugoでポートフォリオサイトを作る際の手順をまとめておこうと思い，執筆するものです．&lt;/p>
+&lt;h2 id="whatswhy-hugo">What’s/Why Hugo?&lt;/h2>
+&lt;h3 id="whats">What’s?&lt;/h3>
+&lt;blockquote>
+&lt;p>Hugo is a static HTML and CSS website generator written in &lt;a class="link" href="https://go.dev/" target="_blank" rel="noopener"
+>Go&lt;/a>. It is optimized for speed, ease of use, and configurability. Hugo takes a directory with content and templates and renders them into a full HTML website.&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;em>（&lt;a class="link" href="https://github.com/gohugoio/hugo/blob/master/README.md" target="_blank" rel="noopener"
+>hugo README.md&lt;/a>より）&lt;/em>&lt;/p>
+&lt;p>　HugoはGolang（プログラミング言語Go）によって記述された静的ウェブサイトジェネレーターです．HTML+CSSで構成された静的サイトを生成するのに便利です．&lt;/p>
+&lt;h3 id="why">Why?&lt;/h3>
+&lt;p>筆者は今までに何度かHugoでブログや静的サイトを構築したことがあります．他の静的サイトジェネレーターの利用経験が無いため比較はできないのですが，Hugoには以下の良い点があると思います．&lt;/p>
+&lt;ol>
+&lt;li>Markdownで記事が書けるという点がとても楽で良い．必要に応じてHTMLをMarkdown内に埋め込むことができる．&lt;/li>
+&lt;li>&lt;a class="link" href="https://themes.gohugo.io/" target="_blank" rel="noopener"
+>https://themes.gohugo.io/&lt;/a>等で公開されているthemeを利用することで，いい感じのデザインのページを簡単に生成できる．&lt;/li>
+&lt;/ol>
+&lt;h2 id="hugoのインストール">Hugoのインストール&lt;/h2>
+&lt;p>　LinuxやMacOSの環境の方はパッケージマネージャーを利用してインストールするのが楽でいいと思います．例えばUbuntu等apt環境だとこんな感じ．&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ sudo apt install hugo
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>　Windows用ソフトウェアでよくあるインストーラパッケージは用意されておらず，Chocolatey等のパッケージマネージャーを利用する必要があったり，Dockerのイメージを利用する必要があります．個人的には面倒な気がするのでWSL上のLinuxにインストールして利用するのがいいと思います．&lt;/p>
+&lt;p>　オープンソースなのでgoの開発環境が有る方は自前でビルドするのもいいかもしれません．&lt;/p>
+&lt;p>　注意すべき点として，Hugoにはstandardとextendedの２つのエディションがあることが挙げられます．一部のThemeはextendedの機能を要求するため，基本的にはextendedをインストールするのがよいでしょう．以下に示す参考ページに具体的なインストール方法が示されていますが，パッケージマネージャーによってextendedのパッケージ名が異なるため注意してください．&lt;/p>
+&lt;p>参考：&lt;a class="link" href="https://gohugo.io/installation/" target="_blank" rel="noopener"
+>https://gohugo.io/installation/&lt;/a>&lt;/p>
+&lt;h2 id="はじめの１コマンド">はじめの１コマンド&lt;/h2>
+&lt;p>&lt;code>hugo new site&lt;/code> コマンドで新しいプロジェクトが生えます．&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ hugo new site myportfolio
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>例えば上記コマンドでカレントディレクトリの &lt;code>myportfolio&lt;/code> 以下にhugoのプロジェクトが生えます．こんな感じに．&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ cd myportfolio/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ls
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>archetypes assets config.toml content data layouts public static themes
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>デフォルトのconfig.tomlはこんな感じです．こんな感じなんだ～（小並感）．&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-toml" data-lang="toml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">baseURL&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;http://example.org/&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">languageCode&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;en-us&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">title&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;My New Hugo Site&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>参考：&lt;a class="link" href="https://gohugo.io/commands/hugo_new_site/" target="_blank" rel="noopener"
+>https://gohugo.io/commands/hugo_new_site/&lt;/a>&lt;/p>
+&lt;p>gitでプロジェクトのソースを管理してる人は &lt;code>git init&lt;/code> しておくと良いと思います．&lt;/p>
+&lt;h2 id="テーマを適用する">テーマを適用する&lt;/h2>
+&lt;p>　今回私は&lt;a class="link" href="https://themes.gohugo.io/themes/hugo-profile/" target="_blank" rel="noopener"
+>Hugo Profile&lt;/a> を使います．画像少なめのポートフォリオサイト用Themeということで選びました．適当に選んだのでこの後変えるかも．（ちなみに前回Hugoでポートフォリオサイト作った時もこんな気持ちで，その一年後が今です．本当はThemeの入れ替えだけならわざわざプロジェクトを作り直す必要は無いのですが，記事のためにやりなおしています．）&lt;/p>
+&lt;p>　テーマの使い方は各テーマのReadmeとかに書いてあるのでそれぞれ参照してください．以下，この記事は&lt;a class="link" href="https://themes.gohugo.io/themes/hugo-profile/" target="_blank" rel="noopener"
+>Hugo Profile&lt;/a>を使った説明になります．&lt;/p>
+&lt;p>とりあえず，submoduleとして &lt;code>themes&lt;/code> 内にテーマを持ってきます．&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>myportfolio:$ git submodule add git@github.com:gurusabarish/hugo-profile.git themes/hugo-profile
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="テーマを編集する">テーマを編集する&lt;/h2>
+&lt;p>　Hugoのポートフォリオテーマははポートフォリオ機能だけなら，configファイルだけで完結してしまうことが多く（筆者個人の感想．n_themes=2），今回のThemeもそうでした．ですので，Hugoを紹介しているサイトとかでよくある &lt;code>hugo new&lt;/code> コマンドを用いた新規記事の作成の説明は省きます．&lt;/p>
+&lt;p>　ここでHugo ProfileのReadmeを読むと &lt;code>hugo new site&lt;/code> の際に &lt;code>-f=yaml&lt;/code> オプションをつけろと書いてありますね．デフォルトではconfigファイルはTOMLですが， yamlも指定できるらしい．Hugoのプロジェクトを立ち上げるときには，まず最初に利用するテーマを決めて，そのReadmeのUsageを確認することをおすすめします．&lt;/p>
+&lt;p>　今回私はすでにオプションを指定せずに&lt;code>hugo new site&lt;/code> を実行して &lt;code>config.toml&lt;/code>を作ってしまいましたが， &lt;code>config.toml&lt;/code> を削除して &lt;code>config.yaml&lt;/code> をテーマの &lt;code>exampleSite&lt;/code> 内から持ってきたら解決しました．&lt;/p>
+&lt;p>　yamlファイルを適当に編集して「とりあえず出せそうな感じになったな」と思ったら内容が激薄になっていました．&lt;/p>
+&lt;figure>&lt;img src="http://crowd4u.github.io/posts/2022-12-28/portfoliosite.png"
+alt="screenshot_of_my_portfolio_site"/>
+&lt;/figure>
+&lt;p>　ローカルでのテストは &lt;code>hugo server&lt;/code> コマンドでできます． &lt;code>localhost:1313&lt;/code> でテストサーバーにアクセスできます．実行中にファイルを更新すると自動でリビルドが走って更新されるので便利です．&lt;/p>
+&lt;p>　デプロイしたサイトはこちらです．&lt;a class="link" href="https://23akei.github.io/myportfolio/" target="_blank" rel="noopener"
+>https://23akei.github.io/myportfolio/&lt;/a>&lt;/p>
+&lt;p>　以上です．実際のデプロイやCI/CDについては別記事で． &lt;em>Thank you for reading!&lt;/em>&lt;/p></description></item><item><title>しがない大学生がレガシーコードに向き合った感想</title><link>http://crowd4u.github.io/posts/2022-12-24-advent_calendar/</link><pubDate>Sat, 24 Dec 2022 00:00:00 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-24-advent_calendar/</guid><description>&lt;p>&lt;a class="link" href="https://adventar.org/calendars/8181" target="_blank" rel="noopener"
 >これはklis Advent Calendar 2022 24日目の記事です。&lt;/a>
 こんにちは、klis19（3編）のnotch_manです。今日はクリスマスイブですね。皆さんはいかがお過ごしでしょうか。巷では熱々ムードが漂っていますが、私に関しては表題にあるように”レガシーコード”と相まみえています。そんな私がこの1年間で向き合ってきたレガシーコードに向き合った感想を綴ろうと思います。&lt;/p>
 &lt;h2 id="結論">結論&lt;/h2>
