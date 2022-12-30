@@ -1,132 +1,20 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>gild on crowd4u tech blog</title><link>http://crowd4u.github.io/author/gild/</link><description>Recent content in gild on crowd4u tech blog</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Thu, 01 Dec 2022 14:54:39 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/author/gild/index.xml" rel="self" type="application/rss+xml"/><item><title>RDS上のDBのデータをローカルで同期できる環境を作った話</title><link>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</link><pubDate>Thu, 01 Dec 2022 14:54:39 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</guid><description>&lt;p>初めまして、融合知能デザイン研究室に仮配属中のギルドです。(留年しなければ「仮」がとれるはず。。。)&lt;br>
-融合知能デザイン研究室で開発しているNextCrowd4uの開発チームに最近加わったため、加入後に初めて行ったことについて書いていきたいと思います。&lt;/p>
-&lt;h2 id="nextcrowd4un4uについて">NextCrowd4u(N4U)について&lt;/h2>
-&lt;p>まだブログも創設から間もないという事で、NextCrowd4Uについてザックリ説明していこうと思います。
-NextCrowd4u(以下N4U)は、「世界をより良い場所にするためのマイクロタスクを実行するための非営利プラットフォーム」として2008年ごろから稼働している&lt;a class="link" href="https://crowd4u.org/ja/" target="_blank" rel="noopener"
->Crowd4u&lt;/a>の後継システムです。
-N4U開発チームで具体的にどんなことを行ってきたかについては、&lt;a class="link" href="../2022-11-30-intro/" >こちらの記事&lt;/a>をご覧ください。&lt;/p>
-&lt;h2 id="n4uの開発現場で発生していたﾁｮｯﾄ面倒な事">N4Uの開発現場で発生していたﾁｮｯﾄ面倒な事&lt;/h2>
-&lt;p>さて、実際の開発ではサーバー上のコードを直接編集。。。するわけでは当然なく、基本はローカルの環境で開発して、GitHubでコミットやらレビューやらしてからデプロイするわけですが、そうなると開発やテストが行いやすいため、実際のサービスのデータをローカルでも扱いたいというニーズが出てきます。
-N4UはAWSをサーバーのインフラとして使用しており、DBもAmazon RDS for MySQLを使っています。
-これまでは、RDS上にある本番環境のデータをローカル環境で使用するために、踏み台サーバーを2回通してSCPコマンドを使ってデータを取得する必要がありました。
-このような環境はテストや開発において支障がでていたとのことで、もう少し手軽に本番とローカルのデータを同期したいというニーズが生まれました。&lt;/p>
-&lt;h2 id="やったこと">やったこと&lt;/h2>
-&lt;p>やったことは非常にシンプルで、N4Uを稼働しているサーバーから、1日1回DBをダンプして踏み台サーバーに送るような環境を作成します。(下図)
-そして、ローカルでリストア用のスクリプトを実行することで、踏み台サーバーにアクセスし、ダンプされたDBをダウンロードして、ローカルのデータベースにリストアするようにしました。&lt;br>
-&lt;figure>&lt;img src="http://crowd4u.github.io/posts/2022-12-07/n4u-db-restore.drawio.png"
-alt="図1" width="75%"/>
-&lt;/figure>
-&lt;/p>
-&lt;p>これを実現するためにやったこととしては&lt;/p>
-&lt;ul>
-&lt;li>N4Uサーバー
-&lt;ol>
-&lt;li>RDSのDBをダンプし、踏み台に送信するシェルスクリプトを作成する(dump.sh)&lt;/li>
-&lt;li>上記のスクリプトを定期的に実行する(cron)&lt;/li>
-&lt;/ol>
-&lt;/li>
-&lt;li>踏み台サーバー
-&lt;ol>
-&lt;li>AWSでEC2の環境を新しく作成する&lt;/li>
-&lt;li>nginxを導入し、ベーシック認証ができるようにする&lt;/li>
-&lt;/ol>
-&lt;/li>
-&lt;li>ローカル環境 &lt;br>
-以下のようなシェルスクリプトを作成する。(restore.sh)
-&lt;ol>
-&lt;li>踏み台サーバーからDBをダウンロードする&lt;/li>
-&lt;li>ローカルのDBにリストアする&lt;/li>
-&lt;/ol>
-&lt;/li>
-&lt;/ul>
-&lt;p>踏み台サーバーの設定に関しては、私が書くよりも分かりやすい記事がたくさんあるかと思います。&lt;br>
-そのため、ここからはDBのダンプスクリプトとリストアスクリプトについて書いていきます。&lt;/p>
-&lt;h3 id="n4uサーバーdbを定期的にダンプする">N4Uサーバー：DBを定期的にダンプする&lt;/h3>
-&lt;p>&lt;strong>1. DBをダンプする&lt;code>dump.sh&lt;/code>を作成する&lt;/strong>&lt;br>
-というわけで、以下のようなダンプスクリプトを作成しました。データベースの容量がある程度大きいことが想定されますのでgzipを使用して圧縮をしています。&lt;/p>
-&lt;div class="highlight" name="dump.sh">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># RDSからDBをダンプする(dump.sqlを作成)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mysqldump -h &lt;span style="color:#f92672">{&lt;/span>RDSのホスト名&lt;span style="color:#f92672">}&lt;/span> -P &lt;span style="color:#f92672">{&lt;/span>ポート番号&lt;span style="color:#f92672">}&lt;/span> -u &lt;span style="color:#f92672">{&lt;/span>ユーザー名&lt;span style="color:#f92672">}&lt;/span> -p&lt;span style="color:#f92672">{&lt;/span>パスワード&lt;span style="color:#f92672">}&lt;/span> -p &lt;span style="color:#f92672">{&lt;/span>DB名&lt;span style="color:#f92672">}&lt;/span> &amp;gt; dump.sql
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># gzipに圧縮&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gzip dump.sql
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># scpコマンドで踏み台に送信する&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scp -i &lt;span style="color:#f92672">{&lt;/span>秘密鍵のパス&lt;span style="color:#f92672">}&lt;/span> dump.sql.gz &lt;span style="color:#f92672">{&lt;/span>踏み台のホスト名&lt;span style="color:#f92672">}&lt;/span>:&lt;span style="color:#f92672">{&lt;/span>踏み台のダウンロード先のパス&lt;span style="color:#f92672">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>パス等が多いという事もあり、文字だらけですが以上のようなスクリプトを作成しました。&lt;br>
-注意する点としては、パスワードは&lt;code>-p&lt;/code>の後に空白を入れずに入力するという事です。空白を入れてしまうとDB名として認識されてしまいます。&lt;br>
-また、私の環境での話ですが、パスワードをDB名より先に入力しないと&lt;code>-p {DB名}&lt;/code>の部分がパスワードとして認識されてしまい、ダンプできないという現象が発生しました。&lt;br>
-そのため、パスワードを先に記述してエラーを回避しています。&lt;/p>
-&lt;p>&lt;strong>2. &lt;code>dump.sh&lt;/code>を定期的に実行する&lt;/strong>&lt;br>
-次にこのスクリプトを定期的に実行していきます。&lt;br>
-AWSということで、Amazon EventBridge！と行きたいところですが、AWSを使用した開発経験が過去に皆無だったこともあり、無難にcronで定期実行することにしました。&lt;br>
-コマンドラインで以下をたたき、crontabを開きます。&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>crontab -e
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>次にcronのスクリプトを書いていきます。&lt;br>
-以下は毎日01時00分にシェルスクリプトを実行するスクリプトです。
-パスは適宜書き換えてください(ex. &lt;code>~/tools/dump.sh&lt;/code>)&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">0&lt;/span> &lt;span style="color:#ae81ff">01&lt;/span> * * * sh dump.sh
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>ちなみにcronの時間指定は&lt;code>{分} {時} {日} {月} {曜日}&lt;/code>で、指定しない項目には&lt;code>*&lt;/code>を指定します。&lt;br>
-以上の設定でN4Uサーバー上で毎日DBをダンプする環境が出来上がりました！&lt;/p>
-&lt;h3 id="ローカル環境dbを踏み台からダウンロードしてリストアする">ローカル環境：DBを踏み台からダウンロードしてリストアする&lt;/h3>
-&lt;p>N4UサーバーからDBをダンプして踏み台に送信できるようになったので、ローカル環境でリストアするスクリプトを書いていきます。
-ちなみにダウンロードには&lt;code>wget&lt;/code>コマンドを使用して行っていきます。
-また、先述した通り踏み台サーバーはベーシック認証を設定しているため、wgetのオプションで指定し、ローカル環境としてDockerを使用しているためDockerコンテナのMySQLにリストアしていきます。&lt;/p>
-&lt;div class="highlight" name="restore.sh">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># DBをwgetでベーシック認証を挟んでダウンロードする&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget -P &lt;span style="color:#f92672">{&lt;/span>ダウンロード先のパス&lt;span style="color:#f92672">}&lt;/span> --http-user&lt;span style="color:#f92672">={&lt;/span>ユーザー名&lt;span style="color:#f92672">}&lt;/span> --http-passwd&lt;span style="color:#f92672">={&lt;/span>パスワード&lt;span style="color:#f92672">}&lt;/span> http://&lt;span style="color:#f92672">{&lt;/span>踏み台のIPアドレス&lt;span style="color:#f92672">}&lt;/span>:&lt;span style="color:#f92672">{&lt;/span>ポート番号&lt;span style="color:#f92672">}&lt;/span>/dump.sql.gz
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># gzip化されているので解凍する&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gunzip -f dump.sql.gz
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Dockerコンテナ内のSQLにリストアする&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cat dump.sql | docker-compose -T &lt;span style="color:#f92672">{&lt;/span>コンテナ名&lt;span style="color:#f92672">}&lt;/span> mysql -u &lt;span style="color:#f92672">{&lt;/span>ユーザー名&lt;span style="color:#f92672">}&lt;/span> -p&lt;span style="color:#f92672">{&lt;/span>パスワード&lt;span style="color:#f92672">}&lt;/span> -p &lt;span style="color:#f92672">{&lt;/span>DB名&lt;span style="color:#f92672">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>以上で&lt;code>restore.sh&lt;/code>も完成しました！&lt;br>
-以上のスクリプトをローカル環境で実行することで(&lt;code>bash restore.sh&lt;/code>)、ローカル環境に本番環境のデータが同期されるようになりました！&lt;/p>
-&lt;h2 id="おわりに">おわりに&lt;/h2>
-&lt;p>以上が私がN4Uの開発チームに入ってからの初めての仕事になります。今後、更に開発に携わっていくことになるかと思いますので、このブログへのアウトプットも含めて頑張っていきたいです。
-ここまで拙文にお付き合いいただきありがとうございました！&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>gild on crowd4u tech blog</title>
+    <link>http://crowd4u.github.io/author/gild/</link>
+    <description>Recent content in gild on crowd4u tech blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Thu, 01 Dec 2022 14:54:39 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/author/gild/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RDS上のDBのデータをローカルで同期できる環境を作った話</title>
+      <link>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</link>
+      <pubDate>Thu, 01 Dec 2022 14:54:39 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</guid>
+      <description>初めまして、融合知能デザイン研究室に仮配属中のギルドです。(留年しなければ「仮」がとれるはず。。。) 融合知能デザイン研究室で開発しているNe</description>
+    </item>
+    
+  </channel>
+</rss>

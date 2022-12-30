@@ -1,126 +1,29 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>23akei on crowd4u tech blog</title><link>http://crowd4u.github.io/author/23akei/</link><description>Recent content in 23akei on crowd4u tech blog</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 28 Dec 2022 15:20:37 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/author/23akei/index.xml" rel="self" type="application/rss+xml"/><item><title>Hugoでポートフォリオサイトを作成する際の備忘録</title><link>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</link><pubDate>Wed, 28 Dec 2022 15:20:37 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
-&lt;p>　この記事は筆者が１年放置したポートフォリオサイトの更新に際して，でHugoでポートフォリオサイトを作る際の手順をまとめておこうと思い，執筆するものです．&lt;/p>
-&lt;h2 id="whatswhy-hugo">What’s/Why Hugo?&lt;/h2>
-&lt;h3 id="whats">What’s?&lt;/h3>
-&lt;blockquote>
-&lt;p>Hugo is a static HTML and CSS website generator written in &lt;a class="link" href="https://go.dev/" target="_blank" rel="noopener"
->Go&lt;/a>. It is optimized for speed, ease of use, and configurability. Hugo takes a directory with content and templates and renders them into a full HTML website.&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;em>（&lt;a class="link" href="https://github.com/gohugoio/hugo/blob/master/README.md" target="_blank" rel="noopener"
->hugo README.md&lt;/a>より）&lt;/em>&lt;/p>
-&lt;p>　HugoはGolang（プログラミング言語Go）によって記述された静的ウェブサイトジェネレーターです．HTML+CSSで構成された静的サイトを生成するのに便利です．&lt;/p>
-&lt;h3 id="why">Why?&lt;/h3>
-&lt;p>筆者は今までに何度かHugoでブログや静的サイトを構築したことがあります．他の静的サイトジェネレーターの利用経験が無いため比較はできないのですが，Hugoには以下の良い点があると思います．&lt;/p>
-&lt;ol>
-&lt;li>Markdownで記事が書けるという点がとても楽で良い．必要に応じてHTMLをMarkdown内に埋め込むことができる．&lt;/li>
-&lt;li>&lt;a class="link" href="https://themes.gohugo.io/" target="_blank" rel="noopener"
->https://themes.gohugo.io/&lt;/a>等で公開されているthemeを利用することで，いい感じのデザインのページを簡単に生成できる．&lt;/li>
-&lt;/ol>
-&lt;h2 id="hugoのインストール">Hugoのインストール&lt;/h2>
-&lt;p>　LinuxやMacOSの環境の方はパッケージマネージャーを利用してインストールするのが楽でいいと思います．例えばUbuntu等apt環境だとこんな感じ．&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ sudo apt install hugo
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>　Windows用ソフトウェアでよくあるインストーラパッケージは用意されておらず，Chocolatey等のパッケージマネージャーを利用する必要があったり，Dockerのイメージを利用する必要があります．個人的には面倒な気がするのでWSL上のLinuxにインストールして利用するのがいいと思います．&lt;/p>
-&lt;p>　オープンソースなのでgoの開発環境が有る方は自前でビルドするのもいいかもしれません．&lt;/p>
-&lt;p>　注意すべき点として，Hugoにはstandardとextendedの２つのエディションがあることが挙げられます．一部のThemeはextendedの機能を要求するため，基本的にはextendedをインストールするのがよいでしょう．以下に示す参考ページに具体的なインストール方法が示されていますが，パッケージマネージャーによってextendedのパッケージ名が異なるため注意してください．&lt;/p>
-&lt;p>参考：&lt;a class="link" href="https://gohugo.io/installation/" target="_blank" rel="noopener"
->https://gohugo.io/installation/&lt;/a>&lt;/p>
-&lt;h2 id="はじめの１コマンド">はじめの１コマンド&lt;/h2>
-&lt;p>&lt;code>hugo new site&lt;/code> コマンドで新しいプロジェクトが生えます．&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ hugo new site myportfolio
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>例えば上記コマンドでカレントディレクトリの &lt;code>myportfolio&lt;/code> 以下にhugoのプロジェクトが生えます．こんな感じに．&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ cd myportfolio/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ls
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>archetypes assets config.toml content data layouts public static themes
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>デフォルトのconfig.tomlはこんな感じです．こんな感じなんだ～（小並感）．&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-toml" data-lang="toml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">baseURL&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;http://example.org/&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">languageCode&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;en-us&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">title&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;My New Hugo Site&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>参考：&lt;a class="link" href="https://gohugo.io/commands/hugo_new_site/" target="_blank" rel="noopener"
->https://gohugo.io/commands/hugo_new_site/&lt;/a>&lt;/p>
-&lt;p>gitでプロジェクトのソースを管理してる人は &lt;code>git init&lt;/code> しておくと良いと思います．&lt;/p>
-&lt;h2 id="テーマを適用する">テーマを適用する&lt;/h2>
-&lt;p>　今回私は&lt;a class="link" href="https://themes.gohugo.io/themes/hugo-profile/" target="_blank" rel="noopener"
->Hugo Profile&lt;/a> を使います．画像少なめのポートフォリオサイト用Themeということで選びました．適当に選んだのでこの後変えるかも．（ちなみに前回Hugoでポートフォリオサイト作った時もこんな気持ちで，その一年後が今です．本当はThemeの入れ替えだけならわざわざプロジェクトを作り直す必要は無いのですが，記事のためにやりなおしています．）&lt;/p>
-&lt;p>　テーマの使い方は各テーマのReadmeとかに書いてあるのでそれぞれ参照してください．以下，この記事は&lt;a class="link" href="https://themes.gohugo.io/themes/hugo-profile/" target="_blank" rel="noopener"
->Hugo Profile&lt;/a>を使った説明になります．&lt;/p>
-&lt;p>とりあえず，submoduleとして &lt;code>themes&lt;/code> 内にテーマを持ってきます．&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>myportfolio:$ git submodule add git@github.com:gurusabarish/hugo-profile.git themes/hugo-profile
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="テーマを編集する">テーマを編集する&lt;/h2>
-&lt;p>　Hugoのポートフォリオテーマははポートフォリオ機能だけなら，configファイルだけで完結してしまうことが多く（筆者個人の感想．n_themes=2），今回のThemeもそうでした．ですので，Hugoを紹介しているサイトとかでよくある &lt;code>hugo new&lt;/code> コマンドを用いた新規記事の作成の説明は省きます．&lt;/p>
-&lt;p>　ここでHugo ProfileのReadmeを読むと &lt;code>hugo new site&lt;/code> の際に &lt;code>-f=yaml&lt;/code> オプションをつけろと書いてありますね．デフォルトではconfigファイルはTOMLですが， yamlも指定できるらしい．Hugoのプロジェクトを立ち上げるときには，まず最初に利用するテーマを決めて，そのReadmeのUsageを確認することをおすすめします．&lt;/p>
-&lt;p>　今回私はすでにオプションを指定せずに&lt;code>hugo new site&lt;/code> を実行して &lt;code>config.toml&lt;/code>を作ってしまいましたが， &lt;code>config.toml&lt;/code> を削除して &lt;code>config.yaml&lt;/code> をテーマの &lt;code>exampleSite&lt;/code> 内から持ってきたら解決しました．&lt;/p>
-&lt;p>　yamlファイルを適当に編集して「とりあえず出せそうな感じになったな」と思ったら内容が激薄になっていました．&lt;/p>
-&lt;figure>&lt;img src="http://crowd4u.github.io/posts/2022-12-28/portfoliosite.png"
-alt="screenshot_of_my_portfolio_site"/>
-&lt;/figure>
-&lt;p>　ローカルでのテストは &lt;code>hugo server&lt;/code> コマンドでできます． &lt;code>localhost:1313&lt;/code> でテストサーバーにアクセスできます．実行中にファイルを更新すると自動でリビルドが走って更新されるので便利です．&lt;/p>
-&lt;p>　デプロイしたサイトはこちらです．&lt;a class="link" href="https://23akei.github.io/myportfolio/" target="_blank" rel="noopener"
->https://23akei.github.io/myportfolio/&lt;/a>&lt;/p>
-&lt;p>　以上です．実際のデプロイやCI/CDについては別記事で． &lt;em>Thank you for reading!&lt;/em>&lt;/p></description></item><item><title>NextCrowd4u概説</title><link>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</link><pubDate>Thu, 08 Dec 2022 10:26:23 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</guid><description>&lt;p>融合知能デザイン研究室のあけいです．
-我々が現在開発しているWebサービスであるNextCrowd4uについて，その概略を説明します．&lt;/p>
-&lt;h2 id="crowd4u概説">Crowd4u概説&lt;/h2>
-&lt;p>まず，&amp;ldquo;Next&amp;quot;以前の「Crowd4u」について簡単に説明します．
-一言で言ってしまえば，Crowd4uはクラウドソーシングプラットフォームです．&lt;br>
-&lt;a class="link" href="https://crowd4u.org/" target="_blank" rel="noopener"
->Corwd4u&lt;/a>&lt;/p>
-&lt;h3 id="クラウドソーシングとは">クラウドソーシングとは&lt;/h3>
-&lt;p>「クラウドソーシング」をご存知でない方も結構いると思われるので，まずクラウドソーシングについて簡単に説明します．
-クラウドソーシングの「クラウド」は&amp;quot;Crowd&amp;quot;すなわち&amp;quot;群衆&amp;quot;を意味します．（&amp;ldquo;Cloud&amp;quot;すなわち&amp;quot;雲&amp;rdquo;，ではないです！）
-それと，外注すなわち&amp;quot;アウトソーシング&amp;quot;を組み合わせた言葉，それがクラウドソーシングです．
-つまりクラウドソーシングは，不特定多数の労働者に対するアウトソーシングです．
-クラウドソーシングを利用した具体的なサービスを以下に示します．&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.mturk.com/" target="_blank" rel="noopener"
->Amazon Mechanical Turk&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://crowdworks.jp/" target="_blank" rel="noopener"
->CrowdWorks&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.lancers.jp/" target="_blank" rel="noopener"
->Lancers&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.ubereats.com/" target="_blank" rel="noopener"
->Uber Eats&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>etc&amp;hellip;&lt;/p>
-&lt;p>Crowd4uもここに挙げたようなクラウドソーシングプラットフォームの１つです．&lt;br>
-クラウドソーシングは不特定多数の労働者に仕事を依頼できるため，&lt;/p>
-&lt;ul>
-&lt;li>大量のタスクの早期完了&lt;/li>
-&lt;li>不特定多数の人間の知見の収集（＝集合知の形成）&lt;/li>
-&lt;/ul>
-&lt;p>などが可能になります．&lt;/p>
-&lt;h3 id="大学の研究室による運営">大学の研究室による運営&lt;/h3>
-&lt;p>Crowd4uは融合知能デザイン研究室が運営するクラウドソーシングプラットフォームで，主にクラウドソーシングの学術研究のために利用されています．
-他の大学の研究にも利用されており，それらの研究の要求に応じて機能を実装するなど，学術研究との結びつきの強いプラットフォームです．&lt;/p>
-&lt;p>ちなみに，Crowd4uに決済機能は無いため，あくまでもボランティアでタスクを請け負ってもらうという仕組みになっています．&lt;/p>
-&lt;h2 id="n4u概説1---humanai">N4U概説1 - Human+AI&lt;/h2>
-&lt;p>「NextCrowd4u」次期Crowd4uシステムについて説明します．&amp;ldquo;Next&amp;quot;Crowd4uには今までのCrowd4u，ひいては既存のクラウドソーシングプラットフォームと大きく異なる点があります．それはすなわち&amp;quot;AI&amp;quot;です．
-近年急速に発展する機械学習，それらAIの能力は一部領域では人間を凌駕するまでに発展しました．今後AIがより多くの場面で利用されると予想されます．&lt;/p>
-&lt;p>NextCrowd4uではAIと我々がより密接に関わるであろう将来に向けて，AIと人間のよりよい関わり方を研究するために，AIに対するクラウドソーシングを行う機能を実装します．&lt;/p>
-&lt;h3 id="aiに対するクラウドソーシング">AIに対するクラウドソーシング&lt;/h3>
-&lt;p>クラウドソーシングというのは&amp;quot;人間&amp;quot;にタスクをこなしてもらうというのが一般的ですが，現在では人間にその対象は人間に留まりません．&lt;br>
-AIの性能を競うコンペティションサイトとして&lt;a class="link" href="https://www.kaggle.com/" target="_blank" rel="noopener"
->Kaggle&lt;/a>等があります．これらのコンペサイトでは，コンペのお題に対して不特定多数のAI開発者が各々のAIの性能を競い，コンペの主催者はAIやAIによって得られたお題の結果を得ます．
-これは不特定多数のAI（とその開発者）に対するクラウドソーシングといえます．
-従来のクラウドソーシングのタスク依頼対象である人間ワーカに対して，AIによるクラウドソーシングにおいて「AI（とその開発者）」を一体とみなしてAIワーカと考えます．&lt;/p>
-&lt;h3 id="人間とaiのクラウドソーシングの違い">人間とAIのクラウドソーシングの違い&lt;/h3>
-&lt;p>AIに対するクラウドソーシングは人間に対するそれとは異なる点があります．
-人間ワーカに対するクラウドソーシングでは，（悪意のあるものを除けば）基本的に高品質なタスク結果を期待できます．しかし，人間ワーカはタスクの実行に時間がかかります．
-一方，AIワーカは大量のタスクを素早く実行できます．しかし，特に教師データを必要とするAIにおいては，教師データが無い，もしくは少ない状態では十分な品質のタスク結果を得ることができません．
-そもそも，機械学習モデルの学習に用いられる教師データは主に人間のワーカによるラベル付けで作成されています．そのため，AIの学習を行う前にはたいてい人間ワーカによる仕事があります．&lt;/p>
-&lt;h3 id="humanai-crowd">Human+AI Crowd&lt;/h3>
-&lt;p>NextCrowd4uでは前述の背景を踏まえ，AIに対してもクラウドソーシングが可能なプラットフォームとします．つまり，NextCrowd4uは&amp;quot;不特定多数の人間&amp;quot;と&amp;quot;不特定多数のAI&amp;rdquo;：Human+AI Crowdに対するクラウドソーシングを行うプラットフォームです．人間へのタスク依頼とAIワーカへのタスク依頼を柔軟に組み合わせることで，より迅速により高品質なタスク結果が期待できます．&lt;/p>
-&lt;h2 id="n4u概論-2---メタプラットフォーム">N4U概論 2 - メタプラットフォーム&lt;/h2>
-&lt;p>上でいくつかのクラウドソーシングプラットフォームを挙げましたが，それらのプラットフォームにはそれぞれ特徴があり，状況やタスクの目的に応じてそれらを使い分けることが出来れば，より効率的により良い結果を得ることが期待できます．
-そこで，NextCrowd4uはクラウドソーシングタスクを直接扱うのではなく，複数の既存プラットフォームを扱う「メタプラットフォーム」を目指しています．
-例えば&lt;/p>
-&lt;ol>
-&lt;li>APIなどを用いて既存のクラウドソーシングサービス上でタスクを発行．&lt;/li>
-&lt;li>タスクの結果を得たら，それをNextCrowd4u上で統合，分析する&lt;/li>
-&lt;li>結果に応じて動的に各プラットフォームでタスクを発行する&lt;/li>
-&lt;/ol>
-&lt;p>&amp;hellip;という流れを繰り返すことを想定しています．&lt;br>
-このように１つの目的に対して状況に応じて柔軟に複数のサービスを用いることが可能なプラットフォームを目指しています．&lt;/p>
-&lt;h2 id="まとめ">まとめ&lt;/h2>
-&lt;p>NextCrowd4uは&lt;br>
-&lt;strong>Human+AI Crowdに対するクラウドソーシングを実現するメタプラットフォーム&lt;/strong>&lt;br>
-です．&lt;/p>
-&lt;p>今後我々N4U開発チームは最新の研究の成果などを取り入れながらNextCrowd4uの開発を行い，AIと人間がより高度に融合した社会の基盤づくりを進めていきます．&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>23akei on crowd4u tech blog</title>
+    <link>http://crowd4u.github.io/author/23akei/</link>
+    <description>Recent content in 23akei on crowd4u tech blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 28 Dec 2022 15:20:37 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/author/23akei/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugoでポートフォリオサイトを作成する際の備忘録</title>
+      <link>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</link>
+      <pubDate>Wed, 28 Dec 2022 15:20:37 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</guid>
+      <description>Introduction この記事は筆者が１年放置したポートフォリオサイトの更新に際して，でHugoでポートフォリオサイトを作る際の手順をまとめておこうと思い，執筆</description>
+    </item>
+    
+    <item>
+      <title>NextCrowd4u概説</title>
+      <link>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</link>
+      <pubDate>Thu, 08 Dec 2022 10:26:23 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</guid>
+      <description>融合知能デザイン研究室のあけいです． 我々が現在開発しているWebサービスであるNextCrowd4uについて，その概略を説明します． Crow</description>
+    </item>
+    
+  </channel>
+</rss>

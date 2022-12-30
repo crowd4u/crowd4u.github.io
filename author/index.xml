@@ -1,1 +1,38 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Author on crowd4u tech blog</title><link>http://crowd4u.github.io/author/</link><description>Recent content in Author on crowd4u tech blog</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 28 Dec 2022 15:20:37 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/author/index.xml" rel="self" type="application/rss+xml"/><item><title>23akei</title><link>http://crowd4u.github.io/author/23akei/</link><pubDate>Wed, 28 Dec 2022 15:20:37 +0900</pubDate><guid>http://crowd4u.github.io/author/23akei/</guid><description/></item><item><title>notch_man</title><link>http://crowd4u.github.io/author/notch_man/</link><pubDate>Sat, 24 Dec 2022 00:00:00 +0900</pubDate><guid>http://crowd4u.github.io/author/notch_man/</guid><description/></item><item><title>gild</title><link>http://crowd4u.github.io/author/gild/</link><pubDate>Thu, 01 Dec 2022 14:54:39 +0900</pubDate><guid>http://crowd4u.github.io/author/gild/</guid><description/></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Author on crowd4u tech blog</title>
+    <link>http://crowd4u.github.io/author/</link>
+    <description>Recent content in Author on crowd4u tech blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 28 Dec 2022 15:20:37 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/author/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>23akei</title>
+      <link>http://crowd4u.github.io/author/23akei/</link>
+      <pubDate>Wed, 28 Dec 2022 15:20:37 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/author/23akei/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>notch_man</title>
+      <link>http://crowd4u.github.io/author/notch_man/</link>
+      <pubDate>Sat, 24 Dec 2022 00:00:00 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/author/notch_man/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gild</title>
+      <link>http://crowd4u.github.io/author/gild/</link>
+      <pubDate>Thu, 01 Dec 2022 14:54:39 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/author/gild/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

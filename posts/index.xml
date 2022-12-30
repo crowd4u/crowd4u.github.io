@@ -1,529 +1,65 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on crowd4u tech blog</title><link>http://crowd4u.github.io/posts/</link><description>Recent content in Posts on crowd4u tech blog</description><generator>Hugo -- gohugo.io</generator><language>ja</language><lastBuildDate>Wed, 28 Dec 2022 15:20:37 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Hugoでポートフォリオサイトを作成する際の備忘録</title><link>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</link><pubDate>Wed, 28 Dec 2022 15:20:37 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
-&lt;p>　この記事は筆者が１年放置したポートフォリオサイトの更新に際して，でHugoでポートフォリオサイトを作る際の手順をまとめておこうと思い，執筆するものです．&lt;/p>
-&lt;h2 id="whatswhy-hugo">What’s/Why Hugo?&lt;/h2>
-&lt;h3 id="whats">What’s?&lt;/h3>
-&lt;blockquote>
-&lt;p>Hugo is a static HTML and CSS website generator written in &lt;a class="link" href="https://go.dev/" target="_blank" rel="noopener"
->Go&lt;/a>. It is optimized for speed, ease of use, and configurability. Hugo takes a directory with content and templates and renders them into a full HTML website.&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;em>（&lt;a class="link" href="https://github.com/gohugoio/hugo/blob/master/README.md" target="_blank" rel="noopener"
->hugo README.md&lt;/a>より）&lt;/em>&lt;/p>
-&lt;p>　HugoはGolang（プログラミング言語Go）によって記述された静的ウェブサイトジェネレーターです．HTML+CSSで構成された静的サイトを生成するのに便利です．&lt;/p>
-&lt;h3 id="why">Why?&lt;/h3>
-&lt;p>筆者は今までに何度かHugoでブログや静的サイトを構築したことがあります．他の静的サイトジェネレーターの利用経験が無いため比較はできないのですが，Hugoには以下の良い点があると思います．&lt;/p>
-&lt;ol>
-&lt;li>Markdownで記事が書けるという点がとても楽で良い．必要に応じてHTMLをMarkdown内に埋め込むことができる．&lt;/li>
-&lt;li>&lt;a class="link" href="https://themes.gohugo.io/" target="_blank" rel="noopener"
->https://themes.gohugo.io/&lt;/a>等で公開されているthemeを利用することで，いい感じのデザインのページを簡単に生成できる．&lt;/li>
-&lt;/ol>
-&lt;h2 id="hugoのインストール">Hugoのインストール&lt;/h2>
-&lt;p>　LinuxやMacOSの環境の方はパッケージマネージャーを利用してインストールするのが楽でいいと思います．例えばUbuntu等apt環境だとこんな感じ．&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ sudo apt install hugo
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>　Windows用ソフトウェアでよくあるインストーラパッケージは用意されておらず，Chocolatey等のパッケージマネージャーを利用する必要があったり，Dockerのイメージを利用する必要があります．個人的には面倒な気がするのでWSL上のLinuxにインストールして利用するのがいいと思います．&lt;/p>
-&lt;p>　オープンソースなのでgoの開発環境が有る方は自前でビルドするのもいいかもしれません．&lt;/p>
-&lt;p>　注意すべき点として，Hugoにはstandardとextendedの２つのエディションがあることが挙げられます．一部のThemeはextendedの機能を要求するため，基本的にはextendedをインストールするのがよいでしょう．以下に示す参考ページに具体的なインストール方法が示されていますが，パッケージマネージャーによってextendedのパッケージ名が異なるため注意してください．&lt;/p>
-&lt;p>参考：&lt;a class="link" href="https://gohugo.io/installation/" target="_blank" rel="noopener"
->https://gohugo.io/installation/&lt;/a>&lt;/p>
-&lt;h2 id="はじめの１コマンド">はじめの１コマンド&lt;/h2>
-&lt;p>&lt;code>hugo new site&lt;/code> コマンドで新しいプロジェクトが生えます．&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ hugo new site myportfolio
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>例えば上記コマンドでカレントディレクトリの &lt;code>myportfolio&lt;/code> 以下にhugoのプロジェクトが生えます．こんな感じに．&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ cd myportfolio/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ ls
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>archetypes assets config.toml content data layouts public static themes
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>デフォルトのconfig.tomlはこんな感じです．こんな感じなんだ～（小並感）．&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-toml" data-lang="toml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">baseURL&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;http://example.org/&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">languageCode&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;en-us&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">title&lt;/span> = &lt;span style="color:#e6db74">&amp;#39;My New Hugo Site&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>参考：&lt;a class="link" href="https://gohugo.io/commands/hugo_new_site/" target="_blank" rel="noopener"
->https://gohugo.io/commands/hugo_new_site/&lt;/a>&lt;/p>
-&lt;p>gitでプロジェクトのソースを管理してる人は &lt;code>git init&lt;/code> しておくと良いと思います．&lt;/p>
-&lt;h2 id="テーマを適用する">テーマを適用する&lt;/h2>
-&lt;p>　今回私は&lt;a class="link" href="https://themes.gohugo.io/themes/hugo-profile/" target="_blank" rel="noopener"
->Hugo Profile&lt;/a> を使います．画像少なめのポートフォリオサイト用Themeということで選びました．適当に選んだのでこの後変えるかも．（ちなみに前回Hugoでポートフォリオサイト作った時もこんな気持ちで，その一年後が今です．本当はThemeの入れ替えだけならわざわざプロジェクトを作り直す必要は無いのですが，記事のためにやりなおしています．）&lt;/p>
-&lt;p>　テーマの使い方は各テーマのReadmeとかに書いてあるのでそれぞれ参照してください．以下，この記事は&lt;a class="link" href="https://themes.gohugo.io/themes/hugo-profile/" target="_blank" rel="noopener"
->Hugo Profile&lt;/a>を使った説明になります．&lt;/p>
-&lt;p>とりあえず，submoduleとして &lt;code>themes&lt;/code> 内にテーマを持ってきます．&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>myportfolio:$ git submodule add git@github.com:gurusabarish/hugo-profile.git themes/hugo-profile
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="テーマを編集する">テーマを編集する&lt;/h2>
-&lt;p>　Hugoのポートフォリオテーマははポートフォリオ機能だけなら，configファイルだけで完結してしまうことが多く（筆者個人の感想．n_themes=2），今回のThemeもそうでした．ですので，Hugoを紹介しているサイトとかでよくある &lt;code>hugo new&lt;/code> コマンドを用いた新規記事の作成の説明は省きます．&lt;/p>
-&lt;p>　ここでHugo ProfileのReadmeを読むと &lt;code>hugo new site&lt;/code> の際に &lt;code>-f=yaml&lt;/code> オプションをつけろと書いてありますね．デフォルトではconfigファイルはTOMLですが， yamlも指定できるらしい．Hugoのプロジェクトを立ち上げるときには，まず最初に利用するテーマを決めて，そのReadmeのUsageを確認することをおすすめします．&lt;/p>
-&lt;p>　今回私はすでにオプションを指定せずに&lt;code>hugo new site&lt;/code> を実行して &lt;code>config.toml&lt;/code>を作ってしまいましたが， &lt;code>config.toml&lt;/code> を削除して &lt;code>config.yaml&lt;/code> をテーマの &lt;code>exampleSite&lt;/code> 内から持ってきたら解決しました．&lt;/p>
-&lt;p>　yamlファイルを適当に編集して「とりあえず出せそうな感じになったな」と思ったら内容が激薄になっていました．&lt;/p>
-&lt;figure>&lt;img src="http://crowd4u.github.io/posts/2022-12-28/portfoliosite.png"
-alt="screenshot_of_my_portfolio_site"/>
-&lt;/figure>
-&lt;p>　ローカルでのテストは &lt;code>hugo server&lt;/code> コマンドでできます． &lt;code>localhost:1313&lt;/code> でテストサーバーにアクセスできます．実行中にファイルを更新すると自動でリビルドが走って更新されるので便利です．&lt;/p>
-&lt;p>　デプロイしたサイトはこちらです．&lt;a class="link" href="https://23akei.github.io/myportfolio/" target="_blank" rel="noopener"
->https://23akei.github.io/myportfolio/&lt;/a>&lt;/p>
-&lt;p>　以上です．実際のデプロイやCI/CDについては別記事で． &lt;em>Thank you for reading!&lt;/em>&lt;/p></description></item><item><title>しがない大学生がレガシーコードに向き合った感想</title><link>http://crowd4u.github.io/posts/2022-12-24-advent_calendar/</link><pubDate>Sat, 24 Dec 2022 00:00:00 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-24-advent_calendar/</guid><description>&lt;p>&lt;a class="link" href="https://adventar.org/calendars/8181" target="_blank" rel="noopener"
->これはklis Advent Calendar 2022 24日目の記事です。&lt;/a>
-こんにちは、klis19（3編）のnotch_manです。今日はクリスマスイブですね。皆さんはいかがお過ごしでしょうか。巷では熱々ムードが漂っていますが、私に関しては表題にあるように”レガシーコード”と相まみえています。そんな私がこの1年間で向き合ってきたレガシーコードに向き合った感想を綴ろうと思います。&lt;/p>
-&lt;h2 id="結論">結論&lt;/h2>
-&lt;ol>
-&lt;li>レガシーコードは向き合い続ければ必ず克服できる&lt;/li>
-&lt;li>ソースコードはメンヘラなので手を加え続けよう（手から離れたソースコードはその瞬間にレガシーコードになる）&lt;/li>
-&lt;li>レガシーと戦いやすい実装を心がける&lt;/li>
-&lt;/ol>
-&lt;h2 id="はじめに">はじめに&lt;/h2>
-&lt;p>私は現在で大学での短期雇用、2社の長期インターン、また業務委託でソフトウェア開発を行なっています。ほとんどの現場のコードベースは長い年月を経て作られたものです。
-私のインターンでの主な業務は、いにしえのソースコードを解読し現世人が解読出来るものに復元することです。
-今日はそのうち1社と大学での業務でレガシーコード改善を行なった感想を綴ろうと思います。&lt;/p>
-&lt;h2 id="10年以上の歴史のあるシステムの根幹にメスを入れる">10年以上の歴史のあるシステムの根幹にメスを入れる&lt;/h2>
-&lt;p>PRTIMESでは現在PHPを始め、各種コードベースのリファクタリングやバージョンアップを進めています。最初は細かいライブラリのリファクタリングを行なっていき、現在は大規模な修正範囲を伴う作業を進めています。
-一般に、影響範囲の広いものほど放置される傾向にあります。しかし、その間にもサービスは成長を続けるので負債もさらに増加していく一方です。だから、誰かがいつかは手を付けなければいけません。私はこの1年で、そんなレガシーコードに向き合う精神と技術力を養うことが出来ました。&lt;/p>
-&lt;h3 id="レガシーコードの改善は至ってシンプル">レガシーコードの改善は至ってシンプル&lt;/h3>
-&lt;p>レガシーコード改善と名前は格好いいですが、技術的にやることは以下の2つだけでシンプルです。&lt;/p>
-&lt;ul>
-&lt;li>ライブラリのリプレイス・バージョンアップを行なう&lt;/li>
-&lt;li>以前と同じ挙動を担保する&lt;/li>
-&lt;/ul>
-&lt;p>ただし、実際に手を加えると以下の様なことを考えなければなりません。そして、これには途方もない労力が必要になります。&lt;/p>
-&lt;ul>
-&lt;li>メジャーアップデートで以前の互換が切られている可能性&lt;/li>
-&lt;li>将来のバージョンアップを見据えたライブラリ選定&lt;/li>
-&lt;li>本当に以前と同等の挙動をしているか確認する（これが一番難しい）&lt;/li>
-&lt;/ul>
-&lt;p>そして、技術以外に必要な物もシンプルです。最早、精神論ですが…（笑）&lt;/p>
-&lt;ul>
-&lt;li>くじけない心&lt;/li>
-&lt;li>粘り強く調査→修正のサイクルを繰り返す忍耐力&lt;/li>
-&lt;/ul>
-&lt;p>はい、最後は精神論です。&lt;/p>
-&lt;blockquote>
-&lt;p>「レガシーコードの改善は技術力だけでなく，それよりもむしろ精神力が要求されます．チーム内でレガシーコード問題の深刻さを共有し，精力的に取り組みましょう」&lt;/p>
-&lt;/blockquote>
-&lt;p>技術で解決出来る事は技術で殴れば解決できます。しかし、レガシーコードリファクタリング緻密に調査を積み重ねる、泥臭く1つ1つを修正していくなど技術以外の能力が要求されます。だから鍛錬を積み重ねて、これらの作業を行なう精神力を養っていく必要があると考えています。&lt;/p>
-&lt;p>これらを兼ね備えてやるべきことをやっていけば必ずレガシーを克服することが出来ます。今年、様々な現場でレガシーを解消してきた私が言うので多分間違いないと思います（笑）&lt;/p>
-&lt;h3 id="結論1レガシーコードは向き合い続ければ必ず克服できる">結論1：レガシーコードは向き合い続ければ必ず克服できる&lt;/h3>
-&lt;p>結論、何が起きても勇敢に向き合う腕力、忍耐力、技術力があればいつかは必ず克服できます。そして、究極のテストである「以前と同じ動作を保証する」テストを終えるだけで実績がそのまま評価に繋げられます。皆さんも臆すること無くレガシーコードに向き合い続けましょう。その力はソフトウェア開発以外でも必ず活かせます。&lt;/p>
-&lt;h2 id="たった数ヶ月で腐敗したコードベースを手直しする">たった数ヶ月で腐敗したコードベースを手直しする&lt;/h2>
-&lt;p>続いての事例は融合知能デザイン研究室で開発中のシステム「NextCrowd4u」です（以下N4U）。N4Uは融合知能デザイン研究室でサービスを運営しているCrowd4u（以下C4U）の後継システムとして現在開発中のシステムです。こちらは前任者から引き継ぎ現在も開発を続けています。&lt;/p>
-&lt;h3 id="事件は唐突に起きる">事件は唐突に起きる&lt;/h3>
-&lt;p>私は4月から開発業務に関わり始めましたが、早速トラブルが発生しました。&lt;/p>
-&lt;figure>&lt;img src="http://crowd4u.github.io/posts/2022-12-24/advent-1.png"
-alt="障害対応" width="64%"/>
-&lt;/figure>
-&lt;p>と言うわけで、復旧作業をしようと思ったのですがまず本番環境への接続方法を確認するのに手間取りました。&lt;/p>
-&lt;figure>&lt;img src="http://crowd4u.github.io/posts/2022-12-24/advent-2.png"
-alt="障害対応" width="64%"/>
-&lt;/figure>
-&lt;p>結局、過去のチャットログから接続方法を確認しログイン出来ました。これ以外にもトラブルが多発している状態で、当時の現場はとても混乱してました。コードベースも前任者からの引き継ぎが十分でなく、ゼロからコードリーディングをして何とかデバッグするという状況でした。&lt;/p>
-&lt;h3 id="結論2ソースコードはメンヘラなので手を加え続けよう">結論2:ソースコードはメンヘラなので手を加え続けよう&lt;/h3>
-&lt;p>ソースコード、特にPythonのようなドラスティックな変化をする言語は手を加え続ける必要があります。数ヶ月コードベースに手を付けられなかったら、&lt;code>pip install -r requirements.txt&lt;/code>すら通らなくなるでしょう。まるでメンヘラですね、手がかかって本当に困ります。&lt;/p>
-&lt;blockquote>
-&lt;p>エンジニアはメンヘラと付き合いがちという俗説をよく耳にします。確かに、プログラムがメンヘラみたいなものなのでそれに扱い慣れてたり類似性を感じるからでしょうかね。
-個人的にはPythonとかすぐに壊れがちの言語をメインに扱っている人ほどメンヘラと付き合ってるのでは？と思ってしまいます。言語別で統計を取ったら面白そうですね（笑）&lt;/p>
-&lt;/blockquote>
-&lt;p>このように、開発陣でコントロール出来ないシステムを運用するのはリスクであり、早急に開発体制を立て直す必要がありました。&lt;/p>
-&lt;h3 id="step1">STEP1&lt;/h3>
-&lt;p>まず、システムをコントロール下に置くために私がシステムやコードベースの全容の把握を行なう必要があります。しかし、稼働中のシステムの運用を止める訳にもいかないので、時間稼ぎのためオペレーション部分から立て直しを進めていきました。最初は私1人で作業を行ない、その手順を全て示すことで他の人も同じ作業が出来るように障害対応と全体のレベルアップ施策を当時に行なっていました。&lt;/p>
-&lt;figure>&lt;img src="http://crowd4u.github.io/posts/2022-12-24/advent-3.png"
-alt="障害対応" width="64%"/>
-&lt;/figure>
-&lt;p>深夜の復旧作業は中々辛かったですが、復旧後は1つ1つの手順を説明し着実にレベルアップを図っていきました。
-&lt;figure>&lt;img src="http://crowd4u.github.io/posts/2022-12-24/advent-4.png"
-alt="障害対応" width="64%"/>
-&lt;/figure>
-&lt;/p>
-&lt;h3 id="step2">STEP2&lt;/h3>
-&lt;p>6月頃から本格的にコードベースの復旧に取りかかります。しかし、この時には4～5月のシステム障害対応の段階でシステム開発の手が止まってしまい担当者もいなくなったことで完全にレガシーシステムと化してしまいました。
-この時の問題点は概ね以下の通りです。&lt;/p>
-&lt;ul>
-&lt;li>Python3.7で動いている&lt;/li>
-&lt;li>ライブラリのメジャーアップデートなどで互換の維持が出来ない&lt;/li>
-&lt;li>アーキテクチャの問題で耐障害性が低くシステムダウンが頻発&lt;/li>
-&lt;/ul>
-&lt;p>4月時点では右も左も分からない状態だった開発陣もシステム障害に向き合う中でコードベースへの理解が深まっていました。そこで私はマネジメントやコードレビューに徹し、さらにメンバーのスキルの底上げを図っていきました。
-レガシー改善では以下のワークフローで開発を進めました。これにより、手を動かしながら私のノウハウも伝えることができメンバーの開発力を大幅に向上させることに成功しました。&lt;/p>
-&lt;ol>
-&lt;li>設計に関してはDesignDocを作成&lt;/li>
-&lt;li>DesignDocでソフトウェア設計に関してnotch_manの経験も踏まえつつアドバイス・改善&lt;/li>
-&lt;li>GitHubでタスクチケット（Issue）を作り開発着手&lt;/li>
-&lt;li>一旦、自力で実装する&lt;/li>
-&lt;li>コードレビューで設計面でnotch_manのノウハウを伝授&lt;/li>
-&lt;/ol>
-&lt;p>これらの手順に沿ってまずライブラリのアップデートや明らかなデッドコードの削除を進めていきました。そして、それが終わった後にソフトウェアアーキテクチャに問題になっていた箇所の大規模リファクタリングを実施しました。（これについては開発者ブログの記事をご覧下さい）。
-最後は以下のPRによって一旦のレガシー改善は完了としました。4月にはてんやわんやしていたチームが見事大規模なレガシー改善を達成した瞬間です。&lt;/p>
-&lt;figure>&lt;img src="http://crowd4u.github.io/posts/2022-12-24/advent-5.png"
-alt="障害対応" width="64%"/>
-&lt;/figure>
-&lt;h3 id="step3">STEP3&lt;/h3>
-&lt;p>これまではレガシーの改善に尽力しましたが、今後はサービスグロースを進めながらレガシーと戦う必要があります。
-n4uのレガシー改善としては主に以下の項目が残っています。&lt;/p>
-&lt;ul>
-&lt;li>テストコードの実装&lt;/li>
-&lt;li>CRUDロジックを新設計の実装にフルリプレイス&lt;/li>
-&lt;li>各種ライブラリの見直し&lt;/li>
-&lt;li>テストを含めたCI/CDの構築&lt;/li>
-&lt;li>ログ基盤の改善&lt;/li>
-&lt;/ul>
-&lt;p>今後、n4uの開発チームは新機能開発を積極的に行なっていき、これまで以上のリリース速度で研究室が目指すサービスの実現に向けて歩みを進めていきます。その一方で、過去の負債やこれから生まれる負債についても戦略的に向き合う体制を構築していきます。&lt;/p>
-&lt;h3 id="結論3-レガシーと戦いやすい実装を心がける">結論3: レガシーと戦いやすい実装を心がける&lt;/h3>
-&lt;p>これは今後のレガシーコードの向き合い方の話です。と言いつついきなり残念な話ですがですが、システムというのは誕生した瞬間に腐り始めるものです。つまり、作ったシステムはその瞬間にレガシーとなるのです。そのため、レガシーを生まないことはほぼ不可能です。だから、システムを開発するときにはコードベースが腐ることを前提として実装を行なう必要があります。
-少し前に技術負債の話が話題になりましたが、私のこれまでの経験を踏まえると以下の点を気をつける必要があると思います。&lt;/p>
-&lt;ol>
-&lt;li>SOLID原則を守る&lt;/li>
-&lt;li>手に負えなくなった機能は置き換えやすいように実装を行なう&lt;/li>
-&lt;li>テストコードを実装する（ユニットテストだけでなくE2Eテストも用意する）&lt;/li>
-&lt;li>CI/CDを整えてテストやコード規約を強制的に機能させる仕組みを用意する。&lt;/li>
-&lt;/ol>
-&lt;p>まず、1つ目について触れます。ソフトウェアの開発原則には様々な物がありますが、Web開発ではSOLID原則を意識するだけでかなり改善すると考えています。特に単一責任の原則と依存性逆転の原則は非常に大事だと思っているので、この辺りの実装についてはコードレビューで品質を保つように努めていきます。&lt;/p>
-&lt;p>2つ目ですが、時の担当者がメンテナンスをしなければならない機能に手を付けられないとそれが放置されてしまい負債という形でレガシーが引き継がれてしまいます。だから、困ったときには捨てることが出来るシステム設計を心がける必要があります。関心の分離はソフトウェアの設計で大事ですが、特にメーラーなどの外部ライブラリを使う際の変更容易性には注意して開発を行ないます。&lt;/p>
-&lt;p>3つ目と4つ目は当たり前の話ですね？ただ、テストコードや静的解析をツールを頑張って導入しても使われなかったら意味が無いです。そのためCI/CDの中でそれらを強制的に動かす仕組みを整えていきます。こうすることで、テストや静的解析の効果を最大限発揮し将来に渡って一定のコード品質を保つことが出来ます。&lt;/p>
-&lt;p>このようにレガシーを生み出さない、あるいは改善するためには普段からどうすれば戦いやすいか？という視点に立つ必要があるなと痛感しました。今後、N4Uの開発の中でこうした知見が貯まっていったら積極的に紹介していきます。&lt;/p>
-&lt;h2 id="雑にこの1年を振り返る">雑にこの1年を振り返る&lt;/h2>
-&lt;p>この1年で超ド級の謎物体やら小学生もビックリするような限界状態の中で前に進み続ける腕力、精神力や技術力を身に着けることが出来ました。来年は攻めの姿勢で構えながら、さらなる深淵へと歩みを進めていきたいと思います。&lt;/p>
-&lt;p>そして、今年はめっちゃ頑張った。その結果、レガシーコードリファクタリング業（みならい）は名乗れる程度に成長したのでは？と思ってます。研究室に眠るレガシーシステムの改善のご用命は融合知能デザイン研究室へ（笑）&lt;/p>
-&lt;h2 id="最後に">最後に&lt;/h2>
-&lt;p>キラキラ光る街並み、その裏側には多くのエンジニアの汗と涙が詰まっています。2人の愛の育みも大事ですが、そういった人達の光を浴びぬ物語を時々で良いから思い出してあげてください。皆様、素敵なクリスマスをお過ごしください。&lt;/p>
-&lt;blockquote>
-&lt;p>（私のクリスマス？おっと、何処かで案件の燃えてる香ばしい匂いがするぞ…）&lt;/p>
-&lt;/blockquote></description></item><item><title>簡単に始める自動デプロイ生活</title><link>http://crowd4u.github.io/posts/2022-12-20-rsync_deploy/</link><pubDate>Tue, 20 Dec 2022 22:00:00 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-20-rsync_deploy/</guid><description>&lt;p>こんにちは、notch_manです。とある講義のメンターをやっていて色々思うところがあったので、今日は簡単に自動デプロイを実現する方法を紹介したいと思います。&lt;/p>
-&lt;h2 id="デプロイって難しそう">デプロイって難しそう&lt;/h2>
-&lt;p>デプロイって皆さんに聞くと大体こんなワードが返ってきます（私の観測範囲）。&lt;/p>
-&lt;blockquote>
-&lt;p>GitHub Actionsでいろいろ書くんでしょ？難しそう&lt;/p>
-&lt;/blockquote>
-&lt;blockquote>
-&lt;p>CircleCIで自動デプロイはやったことありますが、個人だとお金がかかるし…&lt;/p>
-&lt;/blockquote>
-&lt;blockquote>
-&lt;p>友人にプロが居るのでいつも丸投げです&lt;/p>
-&lt;/blockquote>
-&lt;p>確かに、複雑なデプロイや環境毎に変数値が変わるなどの事情があればこれらのサービスを使った方がいろいろな事が出来ます。ただ、デプロイってそんな難しいものなのでしょうか？ここでデプロイという単語を辞書で見てみましょう。&lt;/p>
-&lt;blockquote>
-&lt;p>&lt;strong>デプロイ&lt;/strong>とは、配備する、配置する、展開する、配置につく、などの意味を持つ英単語。ITの分野では開発したソフトウェアを実際の運用環境に配置・展開して実用に供することを指す場合が多い。（出典：&lt;a class="link" href="https://e-words.jp/w/%E3%83%87%E3%83%97%E3%83%AD%E3%82%A4.html" target="_blank" rel="noopener"
->https://e-words.jp/w/デプロイ.html&lt;/a>）&lt;/p>
-&lt;/blockquote>
-&lt;p>これらをまとめると、みなさんが難しいと思う自動デプロイはたった3つの条件を満たせばどんな方法で実現しても良いことが分かります。&lt;/p>
-&lt;ol>
-&lt;li>何かを実行したらソースコード・成果物が所定の位置に配置される&lt;/li>
-&lt;li>所定の位置に配置されたソースコード・成果物が実用的な動作をする&lt;/li>
-&lt;li>それらがなるべく人の手を介さずに処理される&lt;/li>
-&lt;/ol>
-&lt;p>というわけで、これらを満たすとても簡単なデプロイスクリプトを実装してみます。&lt;/p>
-&lt;h2 id="rsyncで始める自動デプロイ">rsyncで始める自動デプロイ&lt;/h2>
-&lt;p>初心者がデプロイ組むときにサーバーのURLとかいろいろ考えるの難しいですよね？でも、そんな状態でも大体”&lt;strong>公開鍵認証&lt;/strong>”でSSHは通じているはずです。となれば、この経路を使ってファイルを置くことが出来そうですね。というわけで、SSH経由で自動デプロイをしてみましょう。これを実現する方法にrsyncというものがあります。rsyncは差分ファイル転送を行なうツールになっています。差分ファイル転送を雑に説明すると、あるファイルに更新があった場合に別のサーバーなどの対応するファイルと変更を同期する機能のことです。rsyncについては&lt;a class="link" href="https://wiki.archlinux.jp/index.php/Rsync" target="_blank" rel="noopener"
->こちらのサイト&lt;/a> がとても参考になります。&lt;/p>
-&lt;p>では、rsyncを使ってデプロイスクリプト（deploy.sh）を書いてみましょう。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>rsync -r -a &amp;lt;転送したいファイルを含んだフォルダ&amp;gt;/* &amp;lt;remote server&amp;gt;:&amp;lt;配置したいディレクトリ&amp;gt;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>さらに~/ssh/configを編集して鍵情報などを登録しておきます。&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>Host &amp;lt;remote server&amp;gt;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> HostName &amp;lt;ip address or server name&amp;gt;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> User example
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> IdentityFile ~/.ssh/example_key
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ServerAliveInterval &lt;span style="color:#ae81ff">60&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>以上でデプロイスクリプトの完成です。あとは&lt;code>bash [deploy.sh](http://deploy.sh)&lt;/code> を実行すればデプロイが走ります。&lt;/p>
-&lt;h2 id="まとめ">まとめ&lt;/h2>
-&lt;p>自動デプロイとか一見すると難しいワードですが、以下を満たせば手段は何でも良いです。&lt;/p>
-&lt;ol>
-&lt;li>何かを実行したらソースコード・成果物が所定の位置に配置される&lt;/li>
-&lt;li>所定の位置に配置されたソースコード・成果物が実用的な動作をする&lt;/li>
-&lt;li>それらがなるべく人の手を介さずに処理される&lt;/li>
-&lt;/ol>
-&lt;p>特に講義で頻繁にデプロイをする方々はぜひ参考にしてみてください。最後になりますが、技術で解決出来る事はさっさと技術で解決して本質にしっかり向き合っていきましょう！&lt;/p></description></item><item><title>NextCrowd4u概説</title><link>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</link><pubDate>Thu, 08 Dec 2022 10:26:23 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</guid><description>&lt;p>融合知能デザイン研究室のあけいです．
-我々が現在開発しているWebサービスであるNextCrowd4uについて，その概略を説明します．&lt;/p>
-&lt;h2 id="crowd4u概説">Crowd4u概説&lt;/h2>
-&lt;p>まず，&amp;ldquo;Next&amp;quot;以前の「Crowd4u」について簡単に説明します．
-一言で言ってしまえば，Crowd4uはクラウドソーシングプラットフォームです．&lt;br>
-&lt;a class="link" href="https://crowd4u.org/" target="_blank" rel="noopener"
->Corwd4u&lt;/a>&lt;/p>
-&lt;h3 id="クラウドソーシングとは">クラウドソーシングとは&lt;/h3>
-&lt;p>「クラウドソーシング」をご存知でない方も結構いると思われるので，まずクラウドソーシングについて簡単に説明します．
-クラウドソーシングの「クラウド」は&amp;quot;Crowd&amp;quot;すなわち&amp;quot;群衆&amp;quot;を意味します．（&amp;ldquo;Cloud&amp;quot;すなわち&amp;quot;雲&amp;rdquo;，ではないです！）
-それと，外注すなわち&amp;quot;アウトソーシング&amp;quot;を組み合わせた言葉，それがクラウドソーシングです．
-つまりクラウドソーシングは，不特定多数の労働者に対するアウトソーシングです．
-クラウドソーシングを利用した具体的なサービスを以下に示します．&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.mturk.com/" target="_blank" rel="noopener"
->Amazon Mechanical Turk&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://crowdworks.jp/" target="_blank" rel="noopener"
->CrowdWorks&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.lancers.jp/" target="_blank" rel="noopener"
->Lancers&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.ubereats.com/" target="_blank" rel="noopener"
->Uber Eats&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>etc&amp;hellip;&lt;/p>
-&lt;p>Crowd4uもここに挙げたようなクラウドソーシングプラットフォームの１つです．&lt;br>
-クラウドソーシングは不特定多数の労働者に仕事を依頼できるため，&lt;/p>
-&lt;ul>
-&lt;li>大量のタスクの早期完了&lt;/li>
-&lt;li>不特定多数の人間の知見の収集（＝集合知の形成）&lt;/li>
-&lt;/ul>
-&lt;p>などが可能になります．&lt;/p>
-&lt;h3 id="大学の研究室による運営">大学の研究室による運営&lt;/h3>
-&lt;p>Crowd4uは融合知能デザイン研究室が運営するクラウドソーシングプラットフォームで，主にクラウドソーシングの学術研究のために利用されています．
-他の大学の研究にも利用されており，それらの研究の要求に応じて機能を実装するなど，学術研究との結びつきの強いプラットフォームです．&lt;/p>
-&lt;p>ちなみに，Crowd4uに決済機能は無いため，あくまでもボランティアでタスクを請け負ってもらうという仕組みになっています．&lt;/p>
-&lt;h2 id="n4u概説1---humanai">N4U概説1 - Human+AI&lt;/h2>
-&lt;p>「NextCrowd4u」次期Crowd4uシステムについて説明します．&amp;ldquo;Next&amp;quot;Crowd4uには今までのCrowd4u，ひいては既存のクラウドソーシングプラットフォームと大きく異なる点があります．それはすなわち&amp;quot;AI&amp;quot;です．
-近年急速に発展する機械学習，それらAIの能力は一部領域では人間を凌駕するまでに発展しました．今後AIがより多くの場面で利用されると予想されます．&lt;/p>
-&lt;p>NextCrowd4uではAIと我々がより密接に関わるであろう将来に向けて，AIと人間のよりよい関わり方を研究するために，AIに対するクラウドソーシングを行う機能を実装します．&lt;/p>
-&lt;h3 id="aiに対するクラウドソーシング">AIに対するクラウドソーシング&lt;/h3>
-&lt;p>クラウドソーシングというのは&amp;quot;人間&amp;quot;にタスクをこなしてもらうというのが一般的ですが，現在では人間にその対象は人間に留まりません．&lt;br>
-AIの性能を競うコンペティションサイトとして&lt;a class="link" href="https://www.kaggle.com/" target="_blank" rel="noopener"
->Kaggle&lt;/a>等があります．これらのコンペサイトでは，コンペのお題に対して不特定多数のAI開発者が各々のAIの性能を競い，コンペの主催者はAIやAIによって得られたお題の結果を得ます．
-これは不特定多数のAI（とその開発者）に対するクラウドソーシングといえます．
-従来のクラウドソーシングのタスク依頼対象である人間ワーカに対して，AIによるクラウドソーシングにおいて「AI（とその開発者）」を一体とみなしてAIワーカと考えます．&lt;/p>
-&lt;h3 id="人間とaiのクラウドソーシングの違い">人間とAIのクラウドソーシングの違い&lt;/h3>
-&lt;p>AIに対するクラウドソーシングは人間に対するそれとは異なる点があります．
-人間ワーカに対するクラウドソーシングでは，（悪意のあるものを除けば）基本的に高品質なタスク結果を期待できます．しかし，人間ワーカはタスクの実行に時間がかかります．
-一方，AIワーカは大量のタスクを素早く実行できます．しかし，特に教師データを必要とするAIにおいては，教師データが無い，もしくは少ない状態では十分な品質のタスク結果を得ることができません．
-そもそも，機械学習モデルの学習に用いられる教師データは主に人間のワーカによるラベル付けで作成されています．そのため，AIの学習を行う前にはたいてい人間ワーカによる仕事があります．&lt;/p>
-&lt;h3 id="humanai-crowd">Human+AI Crowd&lt;/h3>
-&lt;p>NextCrowd4uでは前述の背景を踏まえ，AIに対してもクラウドソーシングが可能なプラットフォームとします．つまり，NextCrowd4uは&amp;quot;不特定多数の人間&amp;quot;と&amp;quot;不特定多数のAI&amp;rdquo;：Human+AI Crowdに対するクラウドソーシングを行うプラットフォームです．人間へのタスク依頼とAIワーカへのタスク依頼を柔軟に組み合わせることで，より迅速により高品質なタスク結果が期待できます．&lt;/p>
-&lt;h2 id="n4u概論-2---メタプラットフォーム">N4U概論 2 - メタプラットフォーム&lt;/h2>
-&lt;p>上でいくつかのクラウドソーシングプラットフォームを挙げましたが，それらのプラットフォームにはそれぞれ特徴があり，状況やタスクの目的に応じてそれらを使い分けることが出来れば，より効率的により良い結果を得ることが期待できます．
-そこで，NextCrowd4uはクラウドソーシングタスクを直接扱うのではなく，複数の既存プラットフォームを扱う「メタプラットフォーム」を目指しています．
-例えば&lt;/p>
-&lt;ol>
-&lt;li>APIなどを用いて既存のクラウドソーシングサービス上でタスクを発行．&lt;/li>
-&lt;li>タスクの結果を得たら，それをNextCrowd4u上で統合，分析する&lt;/li>
-&lt;li>結果に応じて動的に各プラットフォームでタスクを発行する&lt;/li>
-&lt;/ol>
-&lt;p>&amp;hellip;という流れを繰り返すことを想定しています．&lt;br>
-このように１つの目的に対して状況に応じて柔軟に複数のサービスを用いることが可能なプラットフォームを目指しています．&lt;/p>
-&lt;h2 id="まとめ">まとめ&lt;/h2>
-&lt;p>NextCrowd4uは&lt;br>
-&lt;strong>Human+AI Crowdに対するクラウドソーシングを実現するメタプラットフォーム&lt;/strong>&lt;br>
-です．&lt;/p>
-&lt;p>今後我々N4U開発チームは最新の研究の成果などを取り入れながらNextCrowd4uの開発を行い，AIと人間がより高度に融合した社会の基盤づくりを進めていきます．&lt;/p></description></item><item><title>RDS上のDBのデータをローカルで同期できる環境を作った話</title><link>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</link><pubDate>Thu, 01 Dec 2022 14:54:39 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</guid><description>&lt;p>初めまして、融合知能デザイン研究室に仮配属中のギルドです。(留年しなければ「仮」がとれるはず。。。)&lt;br>
-融合知能デザイン研究室で開発しているNextCrowd4uの開発チームに最近加わったため、加入後に初めて行ったことについて書いていきたいと思います。&lt;/p>
-&lt;h2 id="nextcrowd4un4uについて">NextCrowd4u(N4U)について&lt;/h2>
-&lt;p>まだブログも創設から間もないという事で、NextCrowd4Uについてザックリ説明していこうと思います。
-NextCrowd4u(以下N4U)は、「世界をより良い場所にするためのマイクロタスクを実行するための非営利プラットフォーム」として2008年ごろから稼働している&lt;a class="link" href="https://crowd4u.org/ja/" target="_blank" rel="noopener"
->Crowd4u&lt;/a>の後継システムです。
-N4U開発チームで具体的にどんなことを行ってきたかについては、&lt;a class="link" href="../2022-11-30-intro/" >こちらの記事&lt;/a>をご覧ください。&lt;/p>
-&lt;h2 id="n4uの開発現場で発生していたﾁｮｯﾄ面倒な事">N4Uの開発現場で発生していたﾁｮｯﾄ面倒な事&lt;/h2>
-&lt;p>さて、実際の開発ではサーバー上のコードを直接編集。。。するわけでは当然なく、基本はローカルの環境で開発して、GitHubでコミットやらレビューやらしてからデプロイするわけですが、そうなると開発やテストが行いやすいため、実際のサービスのデータをローカルでも扱いたいというニーズが出てきます。
-N4UはAWSをサーバーのインフラとして使用しており、DBもAmazon RDS for MySQLを使っています。
-これまでは、RDS上にある本番環境のデータをローカル環境で使用するために、踏み台サーバーを2回通してSCPコマンドを使ってデータを取得する必要がありました。
-このような環境はテストや開発において支障がでていたとのことで、もう少し手軽に本番とローカルのデータを同期したいというニーズが生まれました。&lt;/p>
-&lt;h2 id="やったこと">やったこと&lt;/h2>
-&lt;p>やったことは非常にシンプルで、N4Uを稼働しているサーバーから、1日1回DBをダンプして踏み台サーバーに送るような環境を作成します。(下図)
-そして、ローカルでリストア用のスクリプトを実行することで、踏み台サーバーにアクセスし、ダンプされたDBをダウンロードして、ローカルのデータベースにリストアするようにしました。&lt;br>
-&lt;figure>&lt;img src="http://crowd4u.github.io/posts/2022-12-07/n4u-db-restore.drawio.png"
-alt="図1" width="75%"/>
-&lt;/figure>
-&lt;/p>
-&lt;p>これを実現するためにやったこととしては&lt;/p>
-&lt;ul>
-&lt;li>N4Uサーバー
-&lt;ol>
-&lt;li>RDSのDBをダンプし、踏み台に送信するシェルスクリプトを作成する(dump.sh)&lt;/li>
-&lt;li>上記のスクリプトを定期的に実行する(cron)&lt;/li>
-&lt;/ol>
-&lt;/li>
-&lt;li>踏み台サーバー
-&lt;ol>
-&lt;li>AWSでEC2の環境を新しく作成する&lt;/li>
-&lt;li>nginxを導入し、ベーシック認証ができるようにする&lt;/li>
-&lt;/ol>
-&lt;/li>
-&lt;li>ローカル環境 &lt;br>
-以下のようなシェルスクリプトを作成する。(restore.sh)
-&lt;ol>
-&lt;li>踏み台サーバーからDBをダウンロードする&lt;/li>
-&lt;li>ローカルのDBにリストアする&lt;/li>
-&lt;/ol>
-&lt;/li>
-&lt;/ul>
-&lt;p>踏み台サーバーの設定に関しては、私が書くよりも分かりやすい記事がたくさんあるかと思います。&lt;br>
-そのため、ここからはDBのダンプスクリプトとリストアスクリプトについて書いていきます。&lt;/p>
-&lt;h3 id="n4uサーバーdbを定期的にダンプする">N4Uサーバー：DBを定期的にダンプする&lt;/h3>
-&lt;p>&lt;strong>1. DBをダンプする&lt;code>dump.sh&lt;/code>を作成する&lt;/strong>&lt;br>
-というわけで、以下のようなダンプスクリプトを作成しました。データベースの容量がある程度大きいことが想定されますのでgzipを使用して圧縮をしています。&lt;/p>
-&lt;div class="highlight" name="dump.sh">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># RDSからDBをダンプする(dump.sqlを作成)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mysqldump -h &lt;span style="color:#f92672">{&lt;/span>RDSのホスト名&lt;span style="color:#f92672">}&lt;/span> -P &lt;span style="color:#f92672">{&lt;/span>ポート番号&lt;span style="color:#f92672">}&lt;/span> -u &lt;span style="color:#f92672">{&lt;/span>ユーザー名&lt;span style="color:#f92672">}&lt;/span> -p&lt;span style="color:#f92672">{&lt;/span>パスワード&lt;span style="color:#f92672">}&lt;/span> -p &lt;span style="color:#f92672">{&lt;/span>DB名&lt;span style="color:#f92672">}&lt;/span> &amp;gt; dump.sql
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># gzipに圧縮&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gzip dump.sql
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># scpコマンドで踏み台に送信する&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scp -i &lt;span style="color:#f92672">{&lt;/span>秘密鍵のパス&lt;span style="color:#f92672">}&lt;/span> dump.sql.gz &lt;span style="color:#f92672">{&lt;/span>踏み台のホスト名&lt;span style="color:#f92672">}&lt;/span>:&lt;span style="color:#f92672">{&lt;/span>踏み台のダウンロード先のパス&lt;span style="color:#f92672">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>パス等が多いという事もあり、文字だらけですが以上のようなスクリプトを作成しました。&lt;br>
-注意する点としては、パスワードは&lt;code>-p&lt;/code>の後に空白を入れずに入力するという事です。空白を入れてしまうとDB名として認識されてしまいます。&lt;br>
-また、私の環境での話ですが、パスワードをDB名より先に入力しないと&lt;code>-p {DB名}&lt;/code>の部分がパスワードとして認識されてしまい、ダンプできないという現象が発生しました。&lt;br>
-そのため、パスワードを先に記述してエラーを回避しています。&lt;/p>
-&lt;p>&lt;strong>2. &lt;code>dump.sh&lt;/code>を定期的に実行する&lt;/strong>&lt;br>
-次にこのスクリプトを定期的に実行していきます。&lt;br>
-AWSということで、Amazon EventBridge！と行きたいところですが、AWSを使用した開発経験が過去に皆無だったこともあり、無難にcronで定期実行することにしました。&lt;br>
-コマンドラインで以下をたたき、crontabを開きます。&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>crontab -e
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>次にcronのスクリプトを書いていきます。&lt;br>
-以下は毎日01時00分にシェルスクリプトを実行するスクリプトです。
-パスは適宜書き換えてください(ex. &lt;code>~/tools/dump.sh&lt;/code>)&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">0&lt;/span> &lt;span style="color:#ae81ff">01&lt;/span> * * * sh dump.sh
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>ちなみにcronの時間指定は&lt;code>{分} {時} {日} {月} {曜日}&lt;/code>で、指定しない項目には&lt;code>*&lt;/code>を指定します。&lt;br>
-以上の設定でN4Uサーバー上で毎日DBをダンプする環境が出来上がりました！&lt;/p>
-&lt;h3 id="ローカル環境dbを踏み台からダウンロードしてリストアする">ローカル環境：DBを踏み台からダウンロードしてリストアする&lt;/h3>
-&lt;p>N4UサーバーからDBをダンプして踏み台に送信できるようになったので、ローカル環境でリストアするスクリプトを書いていきます。
-ちなみにダウンロードには&lt;code>wget&lt;/code>コマンドを使用して行っていきます。
-また、先述した通り踏み台サーバーはベーシック認証を設定しているため、wgetのオプションで指定し、ローカル環境としてDockerを使用しているためDockerコンテナのMySQLにリストアしていきます。&lt;/p>
-&lt;div class="highlight" name="restore.sh">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-&lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># DBをwgetでベーシック認証を挟んでダウンロードする&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget -P &lt;span style="color:#f92672">{&lt;/span>ダウンロード先のパス&lt;span style="color:#f92672">}&lt;/span> --http-user&lt;span style="color:#f92672">={&lt;/span>ユーザー名&lt;span style="color:#f92672">}&lt;/span> --http-passwd&lt;span style="color:#f92672">={&lt;/span>パスワード&lt;span style="color:#f92672">}&lt;/span> http://&lt;span style="color:#f92672">{&lt;/span>踏み台のIPアドレス&lt;span style="color:#f92672">}&lt;/span>:&lt;span style="color:#f92672">{&lt;/span>ポート番号&lt;span style="color:#f92672">}&lt;/span>/dump.sql.gz
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># gzip化されているので解凍する&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>gunzip -f dump.sql.gz
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Dockerコンテナ内のSQLにリストアする&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cat dump.sql | docker-compose -T &lt;span style="color:#f92672">{&lt;/span>コンテナ名&lt;span style="color:#f92672">}&lt;/span> mysql -u &lt;span style="color:#f92672">{&lt;/span>ユーザー名&lt;span style="color:#f92672">}&lt;/span> -p&lt;span style="color:#f92672">{&lt;/span>パスワード&lt;span style="color:#f92672">}&lt;/span> -p &lt;span style="color:#f92672">{&lt;/span>DB名&lt;span style="color:#f92672">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>以上で&lt;code>restore.sh&lt;/code>も完成しました！&lt;br>
-以上のスクリプトをローカル環境で実行することで(&lt;code>bash restore.sh&lt;/code>)、ローカル環境に本番環境のデータが同期されるようになりました！&lt;/p>
-&lt;h2 id="おわりに">おわりに&lt;/h2>
-&lt;p>以上が私がN4Uの開発チームに入ってからの初めての仕事になります。今後、更に開発に携わっていくことになるかと思いますので、このブログへのアウトプットも含めて頑張っていきたいです。
-ここまで拙文にお付き合いいただきありがとうございました！&lt;/p></description></item><item><title>融合知能デザイン研究室でエンジニアブログを始めました</title><link>http://crowd4u.github.io/posts/2022-11-30-intro/</link><pubDate>Mon, 28 Nov 2022 00:25:32 +0900</pubDate><guid>http://crowd4u.github.io/posts/2022-11-30-intro/</guid><description>&lt;p>初めまして。融合知能デザイン研究に所属する現在B4のnotch_manです。
-融合知能デザイン研究室（fusioncomp lab）は2017年に立ち上げたAI+人間+ビッグデータによる融合知能の研究を進める研究室です。&lt;/p>
-&lt;p>&lt;a class="link" href="https://fusioncomplab.org/" target="_blank" rel="noopener"
->融合知能デザイン研究室のHPはこちら&lt;/a>&lt;/p>
-&lt;p>今回は融知研のエンジニアブログの記念すべき初投稿として、エンジニアリング視点で融知研の目指す方向、エンジニアブログを開設した理由などについて書いていこうと思います。&lt;/p>
-&lt;!-- raw HTML omitted -->
-&lt;h2 id="エンジニアブログを開設した理由">エンジニアブログを開設した理由&lt;/h2>
-&lt;p>私たちがエンジニアブログを開設した理由は、自分達の持つ知見を外部に発信することでエンジニア界隈全体に少しでも貢献したいと考えたからです。&lt;/p>
-&lt;p>エンジニアブログは様々なIT企業が技術的知見を外部に発信する場として積極的に運用されています（所感）。例えば、PRTIMES様もエンジニアブログを公開しており、業務内外で得た知見を外部に共有する文化が広まりつつあります。&lt;/p>
-&lt;p>&lt;a class="link" href="https://developers.prtimes.jp/2022/11/04/benefits-of-blog-posts-for-engineers/" target="_blank" rel="noopener"
->PRTIMES 開発者ブログへ&lt;/a>&lt;/p>
-&lt;p>また、私たちにもいろいろなメリットがあります。&lt;/p>
-&lt;h3 id="ブログを書くメリット">ブログを書くメリット&lt;/h3>
-&lt;p>ブログを書くメリットは以下の様なものがあると考えています。&lt;/p>
-&lt;ul>
-&lt;li>自分がやってきたことの記録になる&lt;/li>
-&lt;li>記事を書くことで身に着けた知識が定着する&lt;/li>
-&lt;li>ポートフォリオとして活用出来る&lt;/li>
-&lt;li>研究室での開発という特異な環境の知見自体に価値がある&lt;/li>
-&lt;/ul>
-&lt;p>1つ1つ説明していきます。&lt;/p>
-&lt;h4 id="自分がやってきたことの記録になる">自分がやってきたことの記録になる&lt;/h4>
-&lt;p>研究では手探りでいろいろなことを進めていきます。すると、過去に自分がやったことを忘れて同じようなことを検索したり、車輪の再発明をしたりと無駄な時間が増えてしまいます。これまでの自分のログを文章としてまとめることでそれらを振り返ることが出来るようになります。&lt;/p>
-&lt;h4 id="記事を書くことで身に着けた知識が定着する">記事を書くことで身に着けた知識が定着する&lt;/h4>
-&lt;p>例えば、開発中に何かのバグに遭遇したときに大抵の場合は手探りで解決してしまうと思います。しかし、バグが何故生まれたのか？それを防ぐことは出来ないのか？あるいは技術的な限界があるのか？それらについて深い洞察を行なうことはあまり無いと思います。
-これらをブログ記事を書くことをきっかけに確かな知識として定着することが出来るようになります。何故なら、第3者に自分が直面した課題、その解決策を伝える時に原因から解決策まで完結に、明確に伝える必要があるからです。何となく弄ったらバグが治りました！なんて記事は何の知識にもならないですし、他の人に伝わる内容にはなりません。他に人に伝えるには何となくで済ましたことを1つ1つを言語化し、それを理解する必要があります。それらの活動を通じて、本物の知識を身につけることが出来ますし、ついでに文章執筆スキルも向上させられます。&lt;/p>
-&lt;h4 id="ポートフォリオとして活用出来る">ポートフォリオとして活用出来る&lt;/h4>
-&lt;p>最近のIT関連の就活ではこれまでの実績を要求されがちです。ここで、顕著な実績（学会やコンテストでの受賞歴など）があれば問題無いですが、私たちのような研究室での開発は公に出来ない事も多いので不利になりがちです。しかし、何はどうであれ開発していることに変わりはなく、適切なプロセスを踏んでいればIT業界で働くための基礎体力は身に付いてます。エンジニアブログで執筆する内容はそのような基礎体力を証明する明確なアウトプットだと考えています。さらに、これらを地道に積み上げていき融知研のエンジニアブログが一定の知名度を獲得すれば、その記事を書いているという事実が実績にもなります。訳の分からないコンテスト・ハッカソンに参加したり奇抜なポートフォリオサイトを作るのも良いですが、ブログ記事を通じた地道なアウトプットも1つの戦略として有効です。&lt;/p>
-&lt;h4 id="研究室での開発という特異な環境の知見自体に価値がある">研究室での開発という特異な環境の知見自体に価値がある&lt;/h4>
-&lt;p>私たちは研究室でシステム開発を行なうという稀な環境に属しています。この特異性として以下が考えられます。&lt;/p>
-&lt;ul>
-&lt;li>人が2～3年スパンで総入れ替わりする&lt;/li>
-&lt;li>研究がメインであるためシステム開発は副業的感覚&lt;/li>
-&lt;li>専任のエンジニアが居らず、属人化が進む&lt;/li>
-&lt;li>たまたまプログラミング得意な人が居れば何とかなるが、居ない場合はとても苦労する&lt;/li>
-&lt;li>いずれの状況に関わらずサービスはユーザーに価値を提供し続ける&lt;/li>
-&lt;/ul>
-&lt;p>私が開発に関わり始めたのは2022年の5月頃ですが、前年度まで居られた優秀な方は全員卒業してしまいゼロからの再スタートになってしまいました。
-幸い、前任者ほどでは無いですが私にもある程度の知見がありギリギリのところでサービスを提供し続けられています。
-しかし、そちらを優先しているが故に研究室内のネットワークの管理に手が回らないなどの弊害も生じています。
-これらは徐々に解消しつつあります（これについては別途記事を作成します）が、このような特殊な環境での開発知見はそれ自体一定の需要があるのではないかと考えています。
-私たちはそのような知見を積極的に外部に公開することで、ソフトウェア開発全般に対して微力ながら貢献できれば良いなと考えています。&lt;/p>
-&lt;h2 id="融合知能デザイン研究室のエンジニアリングの目指す方向">融合知能デザイン研究室のエンジニアリングの目指す方向&lt;/h2>
-&lt;p>私たちが今後目指すのは次の3つです。&lt;/p>
-&lt;ol>
-&lt;li>Crowd4uのサービス維持&lt;/li>
-&lt;li>NextCrowd4uのサービス提供を目指す&lt;/li>
-&lt;li>挑戦できる環境を整える&lt;/li>
-&lt;/ol>
-&lt;h3 id="crowd4uのサービス維持">Crowd4uのサービス維持&lt;/h3>
-&lt;p>Crowd4uは2008年頃から稼働している「世界をより良い場所にするためのマイクロタスクを実行するための非営利プラットフォーム」です。
-こちらでは延べ200万回以上のマイクロタスクが実行され、多くのプロジェクトが行なわれてきました。
-また、私たち融合知能デザイン研究室の研究の要に位置づけられるサービスであり今後もサービスの提供を持続していく必要があります。&lt;/p>
-&lt;p>&lt;a class="link" href="https://crowd4u.org/ja/" target="_blank" rel="noopener"
->Crowd4uはこちらからアクセスできます&lt;/a>&lt;/p>
-&lt;p>ただ、現在Crowd4uのサービス維持に当たって以下の様な課題が山積しています。&lt;/p>
-&lt;ul>
-&lt;li>各種バージョンが古くセキュリティ上の課題が深刻である&lt;/li>
-&lt;li>モノリスなEC2を抱えている&lt;/li>
-&lt;li>前任者からの引き継ぎが十分ではない&lt;/li>
-&lt;/ul>
-&lt;p>ただ、我々はこの1年でこれらに立ち向かうための基礎体力を身につけてきました。
-新機能開発とは異なり、このような課題は適切に進めていけばいつかは必ず終わる作業です。
-その事実は後述するNextCrowd4u開発で証明しました。
-多くの課題があり、時間もかかりますが1つ1つ確実に前に進んでいきます。&lt;/p>
-&lt;h3 id="nextcrowd4uのサービス提供を目指す">NextCrowd4uのサービス提供を目指す&lt;/h3>
-&lt;p>NextCrowd4u（N4U）はCrowd4uの後継システムとして昨年から開発が本格化したプロジェクトになっています。
-ただ、昨年から開発と言っても4月で担当が総入れ替わりし、ほぼ0の状態からスタートしたプロジェクトです。
-N4Uは3月下旬から研究目的でテストリリースが始まっていました。
-しかし、これまでとは全く違う言語・フレームワーク・アーキテクチャで開発していたが故にいくつものトラブルが発生しました。
-これらを解消するには多くの作業が必要で、半年近く経った11月末にそれらの機能改修が終了しシステムの安定性を大きく向上させることに成功しました。&lt;/p>
-&lt;p>私たちは知識も経験も無い中、手探りですが課題を洗い出しそれらをタスクチケットに起票して1つ1つ進めていきました。
-並行していた新機能開発も含めてですが、このプロジェクトだけで実に100以上のタスクチケットが立てられました。
-これらを進めるのは途方もない作業で、負担も大きかったと思います。
-しかし、私たちは途方もない量でも1つ1つ進めていけば前に進むことを実感しました。
-そして、やり続ければいつかはやり遂げられることを経験しました。&lt;/p>
-&lt;p>今後は新機能開発やセキュリティ面の改修を進めていき、来年のリリースに向けて攻めの姿勢で開発を続けていきます。&lt;/p>
-&lt;h3 id="挑戦出来る環境を創る">挑戦出来る環境を創る&lt;/h3>
-&lt;p>私は&lt;strong>挑戦するマインド&lt;/strong>がとても大事だと思っています。
-新しいサービスを作るにしても、レガシーなシステムを直すにしても多くの壁があります。
-時にこの壁はとても厚く、越えるのを躊躇ってしまうレベルの物かもしれません。
-しかし、誰かがこの壁を越えることに取り組まなければ私たちは前に進むことは出来ません。&lt;/p>
-&lt;p>これまでも、私を中心に以下のような新しいことに取り組んで来ました（これらについては追々ブログとして公開する予定です）。&lt;/p>
-&lt;ul>
-&lt;li>レガシーシステムのバージョンアッププロジェクト&lt;/li>
-&lt;li>レイヤーアーキテクチャの採用によるAPIのリファクタリング&lt;/li>
-&lt;li>ローカルと本番環境のデータベースの同期&lt;/li>
-&lt;/ul>
-&lt;p>その他にも研究室の取り組みとして以下のようなことをやりました。&lt;/p>
-&lt;ul>
-&lt;li>サーバー構築を組み立てから実施&lt;/li>
-&lt;li>オープンラボの運営を従来と大きく変え、多くの見学者を動員&lt;/li>
-&lt;li>エンジニアブログの立ち上げ&lt;/li>
-&lt;/ul>
-&lt;p>今年、行なった様々なことは主に私を中心に取り組んだ内容になります。
-1つ1つの壁は厚かったですが、皆が力を合わせ助け合うことでそれらを越えることが出来ました。
-この成功は私たち全員の&lt;strong>挑戦するマインド&lt;/strong>が高まり、積極的な行動があったからこそ成功したものです。&lt;/p>
-&lt;p>私は、このような&lt;strong>挑戦するマインド&lt;/strong>を持った人達を増やせれば研究も開発もさらに大きく進んでいくのではないかと考えています。
-そして、私をはじめこの1年プロジェクトに関わった方々には多くの成功や失敗を経験し、たくさんのノウハウを貯めています。&lt;/p>
-&lt;p>&lt;strong>今のラボにはそういった頼もしいメンバーがたくさん居るので、何かやりたい事があったら積極的に手を挙げてドンドン取り組んでいきましょう&lt;/strong>&lt;/p>
-&lt;p>既に多くのメンバーが自分のやりたい事を積極的に行動する雰囲気が出来つつあり、今後も多くのことに取り組んでいく予定です。
-もちろん、本業は研究なのでそれを疎かにしてはいけないです。
-しかし、せっかくの機会なので学生時代にしか出来ない活動をたくさんやっていきましょう。&lt;/p>
-&lt;p>私は、そのような雰囲気作りを今後も積極的に行なっていくつもりです。&lt;/p>
-&lt;h2 id="最後に">最後に&lt;/h2>
-&lt;p>このブログでは今後、研究や開発で詰まったことの知見共有、チーム開発のノウハウなどを積極的に発信していきます。
-引き続きよろしくお願い申し上げます。&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on crowd4u tech blog</title>
+    <link>http://crowd4u.github.io/posts/</link>
+    <description>Recent content in Posts on crowd4u tech blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 28 Dec 2022 15:20:37 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugoでポートフォリオサイトを作成する際の備忘録</title>
+      <link>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</link>
+      <pubDate>Wed, 28 Dec 2022 15:20:37 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</guid>
+      <description>Introduction この記事は筆者が１年放置したポートフォリオサイトの更新に際して，でHugoでポートフォリオサイトを作る際の手順をまとめておこうと思い，執筆</description>
+    </item>
+    
+    <item>
+      <title>しがない大学生がレガシーコードに向き合った感想</title>
+      <link>http://crowd4u.github.io/posts/2022-12-24-advent_calendar/</link>
+      <pubDate>Sat, 24 Dec 2022 00:00:00 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2022-12-24-advent_calendar/</guid>
+      <description>これはklis Advent Calendar 2022 24日目の記事です。 こんにちは、klis19（3編）のnotch_manです。今日はクリスマスイブですね。皆さんはいかが</description>
+    </item>
+    
+    <item>
+      <title>簡単に始める自動デプロイ生活</title>
+      <link>http://crowd4u.github.io/posts/2022-12-20-rsync_deploy/</link>
+      <pubDate>Tue, 20 Dec 2022 22:00:00 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2022-12-20-rsync_deploy/</guid>
+      <description>こんにちは、notch_manです。とある講義のメンターをやっていて色々思うところがあったので、今日は簡単に自動デプロイを実現する方法を紹介</description>
+    </item>
+    
+    <item>
+      <title>NextCrowd4u概説</title>
+      <link>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</link>
+      <pubDate>Thu, 08 Dec 2022 10:26:23 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2022-12-08_what_is_n4u/</guid>
+      <description>融合知能デザイン研究室のあけいです． 我々が現在開発しているWebサービスであるNextCrowd4uについて，その概略を説明します． Crow</description>
+    </item>
+    
+    <item>
+      <title>RDS上のDBのデータをローカルで同期できる環境を作った話</title>
+      <link>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</link>
+      <pubDate>Thu, 01 Dec 2022 14:54:39 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2022-12-07-rds-restore/</guid>
+      <description>初めまして、融合知能デザイン研究室に仮配属中のギルドです。(留年しなければ「仮」がとれるはず。。。) 融合知能デザイン研究室で開発しているNe</description>
+    </item>
+    
+    <item>
+      <title>融合知能デザイン研究室でエンジニアブログを始めました</title>
+      <link>http://crowd4u.github.io/posts/2022-11-30-intro/</link>
+      <pubDate>Mon, 28 Nov 2022 00:25:32 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2022-11-30-intro/</guid>
+      <description>初めまして。融合知能デザイン研究に所属する現在B4のnotch_manです。 融合知能デザイン研究室（fusioncomp lab）は2017年</description>
+    </item>
+    
+  </channel>
+</rss>
