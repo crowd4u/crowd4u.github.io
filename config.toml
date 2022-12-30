@@ -1,7 +1,7 @@
 baseURL = 'http://crowd4u.github.io/'
 languageCode = 'ja'
 title = 'crowd4u tech blog'
-theme = "stack"
+theme = "PaperMod"
 hasCJKLanguage = true
 DefaultContentLanguage = "ja"
 
@@ -11,6 +11,38 @@ page = "/:slug/"
 
 [params]
 mainSections = ["posts"]
+showtoc = true
+ShowRssButtonInSectionTermList = true
+ShowReadingTime = true
+ShowPostNavLinks = true
+disableSpecial1stPost = true
+UseHugoToc = true
+ShowShareButtons = true
+ShowCodeCopyButtons = false
+ShowWordCount = true
+disableScrollToTop = false
+comments = false
+hidemeta = false
+hideSummary = false
+tocopen = true
+title = 'crowd4u tech blog'
+description = "融合知能デザイン研究室のエンジニアブログです"
+env = "production"
+
+[params.homeInfoParams]
+Title = 'crowd4u tech blog'
+Content = "融合知能デザイン研究室のエンジニアブログです"
+
+#[params.socialIcons]
+#name = "feed"
+#url = "https://crowd4u.github.io/index.xml"
+
+[params.profileMode]
+enabled = false
+
+[minify]
+disableXML = true
+minifyOutput = true
 
 [taxonomies]
 tags = "tags"
