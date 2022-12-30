@@ -1,7 +1,7 @@
 baseURL = 'http://crowd4u.github.io/'
 languageCode = 'ja'
 title = 'crowd4u tech blog'
-theme = "PaperMod"
+theme = "papermod"
 hasCJKLanguage = true
 DefaultContentLanguage = "ja"
 
