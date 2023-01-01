@@ -6,7 +6,16 @@
     <description>Recent content on crowd4u tech blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 31 Dec 2022 10:00:41 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 01 Jan 2023 00:00:00 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Deta.shでサクッとウェブアプリをデプロイしてみる</title>
+      <link>http://crowd4u.github.io/posts/2023-01-01-start-deta/</link>
+      <pubDate>Sun, 01 Jan 2023 00:00:00 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2023-01-01-start-deta/</guid>
+      <description>はじめに 昨年、今までアプリケーションの運用ができるPaaS(Platform as a Service)の一つであるHerokuが無料プランを廃止し</description>
+    </item>
+    
     <item>
       <title>GitHub ActionsではじめてのCI/CD</title>
       <link>http://crowd4u.github.io/posts/2022-12-13-github_actions/</link>
