@@ -2,19 +2,21 @@
 
 <header class="page-header">
     {{- partial "breadcrumbs.html" . }}
+    {{ $author := index $.Site.Data.authors .Title }}
     <h1>
-      {{ .Title }}
-      {{- if and (or (eq .Kind `term`) (eq .Kind `section`)) (.Param "ShowRssButtonInSectionTermList") }}
-      <a href="index.xml" title="RSS" aria-label="RSS">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round" height="23">
-          <path d="M4 11a9 9 0 0 1 9 9" />
-          <path d="M4 4a16 16 0 0 1 16 16" />
-          <circle cx="5" cy="19" r="1" />
-        </svg>
-      </a>
-      {{- end }}
+      {{ index $author "name" }}
     </h1>
+    <ul style="display: flex;list-style: none;gap: 5px;">
+      {{ with (index $author "links") }}
+        {{ range $v := (index $author "links") }}
+          <li>
+            <a href="{{ index $v "link" }}">
+              {{ index $v "name" }}
+            </a>
+          </li>
+        {{ end }}
+      {{ end }}
+    </ul>
     {{- if .Description }}
     <div class="post-description">
       {{ .Description | markdownify }}
@@ -33,19 +35,10 @@
   {{- $pages := union .RegularPages .Sections }}
   
   {{- $paginator := .Paginate $pages }}
-  
   {{- $term := .Data.Term }}
   {{- range $index, $page := $paginator.Pages }}
-  
-  {{- $class := "post-entry" }}
-  
-  {{- $user_preferred := or site.Params.disableSpecial1stPost site.Params.homeInfoParams }}
-  {{- if (and $.IsHome (eq $paginator.PageNumber 1) (eq $index 0) (not $user_preferred)) }}
-  {{- $class = "first-entry" }}
-  {{- else if $term }}
-  {{- $class = "post-entry tag-entry" }}
-  {{- end }}
-  
+  {{- $class := "post-entry tag-entry" }}
+
   <article class="{{ $class }}">
     {{- $isHidden := (site.Params.cover.hidden | default site.Params.cover.hiddenInList) }}
     {{- partial "cover.html" (dict "cxt" . "IsHome" true "isHidden" $isHidden) }}
@@ -91,4 +84,5 @@
     </nav>
   </footer>
   {{- end }}
+  
 {{- end }}{{- /* end main */ -}}
