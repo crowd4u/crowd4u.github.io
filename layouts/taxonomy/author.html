@@ -20,9 +20,9 @@
         {{ end }}
       {{ end }}
     </ul>
-    {{- if .Description }}
+    {{- with (index $author "description") }}
     <div class="post-description">
-      {{ .Description | markdownify }}
+      {{ . | markdownify }}
     </div>
     {{- end }}
   </header>
