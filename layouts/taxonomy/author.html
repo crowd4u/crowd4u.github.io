@@ -3,6 +3,9 @@
 <header class="page-header">
     {{- partial "breadcrumbs.html" . }}
     {{ $author := index $.Site.Data.authors .Title }}
+    {{ with resources.Get (printf "avatars/%s.png" (index $author "id")) }}
+      <img alt="{{ printf "%s's avatar" (index $author "name")}}" src="{{ .RelPermalink }}" height="200px" width="200px" style="border-radius: 75%;" />
+    {{ end }}
     <h1>
       {{ index $author "name" }}
     </h1>
