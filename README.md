@@ -39,7 +39,22 @@ git submodule update
 ``` toml
 name = "Nakaya" # 表示される名前
 id = "eniehack" # URL に使用される文字列。「この著者が書いた記事一覧」ページの URL に用いられる。
+description = "B4 の Nakaya です！crowd4u.github.io の構築運用をしています。" # 著者ページに表示される自己紹介。Markdown が使える。
+
+[[links]] # 著者ページで名前に下に貼られるリンクを links として定義します
+name = "Twitter" # アンカーテキストです
+link = "https://twitter.com/eniehack" # アンカーテキストをクリックすると飛ぶ url です
+
+[[links]] # links は複数定義することもできます。
+name = "Website"
+link = "https://eniehack.net/~eniehack"
 ```
+
+2. avatar の追加(初回のみ、任意)
+
+初めて記事を書く際、オプションで自分の Avatar を追加することができます。
+ファイルは`assets/avatars` 以下に `{{toml で定義した id}}.png`に置きます。
+例えば上の著者情報ファイルの場合は`assets/avatars/eniehack.png` に avatar を置きます。
 
 2. 原稿ファイルの作成
 
