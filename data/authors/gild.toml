@@ -1,2 +1,12 @@
 name = "ギルド"
 id = "gild"
+description = "もうすぐB4になる予定のギルドです。つよつよエンジニアになりたい。"
+
+
+[[links]]
+name = "Twitter"
+link = "https://twitter.com/Gild_prog"
+
+[[links]]
+name = "Portfolio"
+link = "https://gild-shogi.github.io/Portfolio/"
