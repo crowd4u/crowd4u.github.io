@@ -55,3 +55,24 @@ minifyOutput = true
 [taxonomies]
 tags = "tags"
 author = "author"
+
+[[menu.main]]
+identifier = "posts"
+name = "posts"
+url = "/posts/"
+weight = 10
+  
+[[menu.main]]
+identifier = "search"
+name = "search"
+url = "/search/"
+weight = 12
+
+[[menu.main]]
+identifier = "tags"
+name = "tags"
+url = "/tags/"
+weight = 15
+
+[outputs]
+home = ["HTML", "JSON"]
