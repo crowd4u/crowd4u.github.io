@@ -5,6 +5,9 @@
     <loc>http://crowd4u.github.io/author/</loc>
     <lastmod>2023-02-16T16:32:38+09:00</lastmod>
   </url><url>
+    <loc>http://crowd4u.github.io/tags/docker/</loc>
+    <lastmod>2023-02-16T16:32:38+09:00</lastmod>
+  </url><url>
     <loc>http://crowd4u.github.io/author/gild/</loc>
     <lastmod>2023-02-16T16:32:38+09:00</lastmod>
   </url><url>
@@ -14,10 +17,22 @@
     <loc>http://crowd4u.github.io/posts/</loc>
     <lastmod>2023-02-16T16:32:38+09:00</lastmod>
   </url><url>
+    <loc>http://crowd4u.github.io/tags/python/</loc>
+    <lastmod>2023-02-16T16:32:38+09:00</lastmod>
+  </url><url>
+    <loc>http://crowd4u.github.io/tags/</loc>
+    <lastmod>2023-02-16T16:32:38+09:00</lastmod>
+  </url><url>
     <loc>http://crowd4u.github.io/</loc>
     <lastmod>2023-02-16T16:32:38+09:00</lastmod>
   </url><url>
+    <loc>http://crowd4u.github.io/tags/deta.sh/</loc>
+    <lastmod>2023-01-01T00:00:00+09:00</lastmod>
+  </url><url>
     <loc>http://crowd4u.github.io/posts/2023-01-01-start-deta/</loc>
+    <lastmod>2023-01-01T00:00:00+09:00</lastmod>
+  </url><url>
+    <loc>http://crowd4u.github.io/tags/fastapi/</loc>
     <lastmod>2023-01-01T00:00:00+09:00</lastmod>
   </url><url>
     <loc>http://crowd4u.github.io/author/23akei/</loc>
@@ -30,9 +45,6 @@
     <lastmod>2022-12-31T10:00:41+09:00</lastmod>
   </url><url>
     <loc>http://crowd4u.github.io/tags/hugo/</loc>
-    <lastmod>2022-12-31T10:00:41+09:00</lastmod>
-  </url><url>
-    <loc>http://crowd4u.github.io/tags/</loc>
     <lastmod>2022-12-31T10:00:41+09:00</lastmod>
   </url><url>
     <loc>http://crowd4u.github.io/posts/2022-12-28-hugo_portfolio/</loc>

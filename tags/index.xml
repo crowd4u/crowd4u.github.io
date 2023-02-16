@@ -6,7 +6,43 @@
     <description>Recent content in Tags on 融合知能デザイン研究室 エンジニアブログ</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 31 Dec 2022 10:00:41 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 16 Feb 2023 16:32:38 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker</title>
+      <link>http://crowd4u.github.io/tags/docker/</link>
+      <pubDate>Thu, 16 Feb 2023 16:32:38 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>http://crowd4u.github.io/tags/python/</link>
+      <pubDate>Thu, 16 Feb 2023 16:32:38 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>deta.sh</title>
+      <link>http://crowd4u.github.io/tags/deta.sh/</link>
+      <pubDate>Sun, 01 Jan 2023 00:00:00 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/tags/deta.sh/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>FastAPI</title>
+      <link>http://crowd4u.github.io/tags/fastapi/</link>
+      <pubDate>Sun, 01 Jan 2023 00:00:00 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/tags/fastapi/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>GitHub Actions</title>
       <link>http://crowd4u.github.io/tags/github-actions/</link>
