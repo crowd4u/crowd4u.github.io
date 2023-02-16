@@ -3,7 +3,7 @@ title: "Deta.shでサクッとウェブアプリをデプロイしてみる"
 date: 2023-01-01T00:00:00+09:00
 draft: false
 author: gild
-tag: ["FastAPI", "deta.sh"]
+tags: ["FastAPI", "deta.sh"]
 ---
 
 ## はじめに

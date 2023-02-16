@@ -3,7 +3,7 @@ title: "M1とWSL両方で動作するJupyterLabのDockerファイルを作った
 date: 2023-02-16T16:32:38+09:00
 draft: false
 author: gild
-tag: ["Docker", "Python"]
+tags: ["Docker", "Python"]
 ---
 
 ## はじめに
