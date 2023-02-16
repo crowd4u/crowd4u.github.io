@@ -55,3 +55,12 @@ minifyOutput = true
 [taxonomies]
 tags = "tags"
 author = "author"
+  
+[[menu.main]]
+identifier = "tags"
+name = "tags"
+url = "/tags/"
+weight = 12
+
+[outputs]
+home = ["HTML", "JSON"]
