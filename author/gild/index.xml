@@ -6,7 +6,16 @@
     <description>Recent content in gild on 融合知能デザイン研究室 エンジニアブログ</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 01 Jan 2023 00:00:00 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/author/gild/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 16 Feb 2023 16:32:38 +0900</lastBuildDate><atom:link href="http://crowd4u.github.io/author/gild/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>M1とWSL両方で動作するJupyterLabのDockerファイルを作った話</title>
+      <link>http://crowd4u.github.io/posts/2023-02-16-jupyterdocker/</link>
+      <pubDate>Thu, 16 Feb 2023 16:32:38 +0900</pubDate>
+      
+      <guid>http://crowd4u.github.io/posts/2023-02-16-jupyterdocker/</guid>
+      <description>はじめに 融合知能デザイン研究室でもB3向けのプレゼミが始まり、先生や先輩も環境を再現しやすくするためにDockerでコンテナ立てるかーと思い</description>
+    </item>
+    
     <item>
       <title>Deta.shでサクッとウェブアプリをデプロイしてみる</title>
       <link>http://crowd4u.github.io/posts/2023-01-01-start-deta/</link>
